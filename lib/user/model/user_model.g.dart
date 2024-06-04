@@ -8,7 +8,7 @@ part of 'user_model.dart';
 
 LoadedUserState _$LoadedUserStateFromJson(Map<String, dynamic> json) =>
     LoadedUserState(
-      user: User.fromJson(json['user'] as Map<String, dynamic>),
+      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$LoadedUserStateToJson(LoadedUserState instance) =>
@@ -16,22 +16,22 @@ Map<String, dynamic> _$LoadedUserStateToJson(LoadedUserState instance) =>
       'user': instance.user,
     };
 
-User _$UserFromJson(Map<String, dynamic> json) => User(
-      userId: (json['userId'] as num).toInt(),
+UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
+      userId: (json['user_id'] as num).toInt(),
       nickname: json['nickname'] as String,
-      email: json['email'] as String,
+      email: json['e_mail'] as String,
       image: json['image'] as String,
-      phoneNumber: json['phoneNumber'] as String?,
-      refreshToken: json['refreshToken'] as String,
-      pushNoticeToken: json['pushNoticeToken'] as String,
+      phoneNumber: json['phone_number'] as String?,
+      refreshToken: json['refresh_token'] as String,
+      pushNotificationToken: json['push_notification_token'] as String,
     );
 
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      'userId': instance.userId,
+Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
+      'user_id': instance.userId,
       'nickname': instance.nickname,
-      'email': instance.email,
+      'e_mail': instance.email,
       'image': instance.image,
-      'phoneNumber': instance.phoneNumber,
-      'refreshToken': instance.refreshToken,
-      'pushNoticeToken': instance.pushNoticeToken,
+      'phone_number': instance.phoneNumber,
+      'refresh_token': instance.refreshToken,
+      'push_notification_token': instance.pushNotificationToken,
     };

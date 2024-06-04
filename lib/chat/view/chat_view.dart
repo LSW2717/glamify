@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glamify/common/const/typography.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:go_router/go_router.dart';
 
 class ChatView extends StatelessWidget {
@@ -16,7 +18,8 @@ class ChatView extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: (){
-                  context.push('/chatDetail');
+                  final User user = User(id: '2');
+                  context.push('/chatDetail', extra: user);
                 },
                 child: Container(
                   width: 390.w,

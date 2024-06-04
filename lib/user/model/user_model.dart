@@ -15,7 +15,7 @@ class LoadingUserState extends UserState {}
 
 @JsonSerializable()
 class LoadedUserState extends UserState{
-  final User user;
+  final UserModel user;
 
   LoadedUserState({
     required this.user,
@@ -28,25 +28,36 @@ class LoadedUserState extends UserState{
 }
 
 @JsonSerializable()
-class User {
+class UserModel {
+
+  @JsonKey(name: 'user_id')
   final int userId;
+
   final String nickname;
+
+  @JsonKey(name: 'e_mail')
   final String email;
   final String image;
-  final String? phoneNumber;
-  final String refreshToken;
-  final String pushNoticeToken;
 
-  User({
+  @JsonKey(name: 'phone_number')
+  final String? phoneNumber;
+
+  @JsonKey(name: 'refresh_token')
+  final String refreshToken;
+
+  @JsonKey(name: 'push_notification_token')
+  final String pushNotificationToken;
+
+  UserModel({
     required this.userId,
     required this.nickname,
     required this.email,
     required this.image,
     this.phoneNumber,
     required this.refreshToken,
-    required this.pushNoticeToken,
+    required this.pushNotificationToken,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
 }

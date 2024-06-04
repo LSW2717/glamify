@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -44,11 +45,7 @@ class ChatBottomBar extends StatelessWidget {
                       sendPressed(controller.text);
                       controller.clear();
                     },
-                    icon: SvgPicture.asset(
-                      'asset/svg/send_button.svg',
-                      width: 28.w,
-                      height: 32.w,
-                    ),
+                    icon: Icon(CupertinoIcons.heart_fill, color: Colors.pinkAccent,),
                   ),
                 ],
               ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,7 +34,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           routes: [
             GoRoute(
               path: 'chatDetail',
-              pageBuilder: (context, state) => platformPage(const ChatDetailView(), 'chatDetail'),
+              pageBuilder: (context, state) {
+                final user = state.extra as User;
+                return platformPage(ChatDetailView(user: user,), 'chatDetail');
+              }
             ),
           ]),
     ],
