@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "608586296571",
+    "project_id": "randomchat-a67e9",
+    "storage_bucket": "randomchat-a67e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608586296571:android:9ff8ed51fbde040f53145e",
+        "android_client_info": {
+          "package_name": "com.mobile.glamify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk2UdORaXw7jm18o8U-5oL_I9oWJLguTE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
