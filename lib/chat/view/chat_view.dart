@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:glamify_mobile/common/const/typography.dart';
+import 'package:glamify/common/const/typography.dart';
 import 'package:go_router/go_router.dart';
 
 class ChatView extends StatelessWidget {

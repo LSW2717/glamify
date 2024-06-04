@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:glamify_mobile/mypage/view/my_page_login_view.dart';
-import 'package:glamify_mobile/user/model/user_model.dart';
-import 'package:glamify_mobile/user/view_model/user_view_model.dart';
+import 'package:glamify/mypage/view/my_page_login_view.dart';
+import 'package:glamify/user/model/user_model.dart';
+import 'package:glamify/user/view_model/user_view_model.dart';
 
 class MyPageView extends ConsumerWidget {
   const MyPageView({super.key});

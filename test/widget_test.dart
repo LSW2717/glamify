@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:glamify_mobile/main.dart';
+import 'package:glamify/main.dart';
 
 
 void main() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:glamify_mobile/common/firebase_setting/firebase_handler.dart';
+import 'package:glamify/common/firebase_setting/firebase_handler.dart';
 
 
 class HomeView extends ConsumerWidget {

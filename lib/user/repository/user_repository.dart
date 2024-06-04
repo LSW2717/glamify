@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:glamify_mobile/common/model/empty_response_model.dart';
-import 'package:glamify_mobile/common/model/token_response_model.dart';
+import 'package:glamify/common/model/empty_response_model.dart';
+import 'package:glamify/common/model/token_response_model.dart';
 import 'package:retrofit/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -1,10 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
-import 'package:glamify_mobile/common/model/response_dto.dart';
-import 'package:glamify_mobile/common/model/token_response_model.dart';
-import 'package:glamify_mobile/common/repository/test_repository.dart';
-import 'package:glamify_mobile/user/model/fcm_token_request_model.dart';
+import 'package:glamify/common/model/response_dto.dart';
+import 'package:glamify/common/model/token_response_model.dart';
+import 'package:glamify/common/repository/test_repository.dart';
+import 'package:glamify/user/model/fcm_token_request_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../chat/repository/chat_repository.dart';

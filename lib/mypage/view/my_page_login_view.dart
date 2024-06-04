@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:glamify_mobile/common/const/typography.dart';
-import 'package:glamify_mobile/user/repository/user_repository.dart';
+import 'package:glamify/common/const/typography.dart';
+import 'package:glamify/user/repository/user_repository.dart';
 
 import '../../user/view_model/user_view_model.dart';
 

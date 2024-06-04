@@ -5,8 +5,8 @@ import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:glamify_mobile/common/data_source/data.dart';
-import 'package:glamify_mobile/common/secure_storage/secure_storage.dart';
+import 'package:glamify/common/data_source/data.dart';
+import 'package:glamify/common/secure_storage/secure_storage.dart';
 
 import 'global_variable.dart';
 import 'notification_setting.dart';
