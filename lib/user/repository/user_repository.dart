@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:glamify/common/model/empty_response_model.dart';
+import 'package:glamify/common/model/empty_dto_model.dart';
 import 'package:glamify/common/model/token_response_model.dart';
+import 'package:glamify/user/model/update_nickname_request_model.dart';
 import 'package:retrofit/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,7 +34,7 @@ abstract class UserRepository{
   @Headers({
     'accessToken': 'true',
   })
-  Future<ResponseDto<EmptyResponse>> updateFcmToken(@Body() FcmTokenRequest request);
+  Future<ResponseDto<EmptyDto>> updateFcmToken(@Body() FcmTokenRequest request);
 
   @POST('/auth/reissue')
   @Headers({
@@ -41,6 +42,23 @@ abstract class UserRepository{
   })
   Future<ResponseDto<TokenResponse>> reissue();
 
+  @POST('/user/update_nickname')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> updateNickname(@Body() UpdateNicknameRequest request);
+  
+  @POST('/user/unsubscribe')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> unsubscribe(@Body() EmptyDto request);
+
+  @POST('/auth/logout')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> logout(@Body() EmptyDto request);
 }
 
 

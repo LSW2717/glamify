@@ -38,18 +38,6 @@ class MyPageLoginView extends ConsumerWidget {
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.read(userViewModelProvider.notifier).chatCheck();
-                  },
-                  child: Text('로그인'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.read(userViewModelProvider.notifier).logout();
-                  },
-                  child: Text('로'),
-                ),
               ],
             ),
           ),

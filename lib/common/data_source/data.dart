@@ -7,3 +7,5 @@ const FCM_TOKEN_KEY = 'FCM_TOKEN';
 
 
 const ip = 'dating.batro.org:4000';
+
+const socketUrl = 'ws://dating.batro.org:4000/ws';

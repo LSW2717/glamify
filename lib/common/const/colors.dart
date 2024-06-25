@@ -18,3 +18,7 @@ const base2 = Color(0xFFF2F4FA);
 const base3 = Color(0xFFE8EBF5);
 const base4 = Color(0xFFD9DEEE);
 const base5  = Color(0xFFB4BBD4);
+
+
+const main1 = Color(0xFFFF99D0);
+const main2 = Color(0xFFFF008A);

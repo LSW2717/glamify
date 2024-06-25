@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glamify/chat/view_model/chat_list_view_model.dart';
 import 'package:glamify/common/test_data/test_page1.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../chat/view/chat_view.dart';
@@ -34,6 +36,9 @@ class RootTab extends HookConsumerWidget {
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           ref.read(tabIndexViewModelProvider(controller).notifier).setIndex(index);
+          if(index == 2){
+            ref.read(chatListProvider.notifier).updateChatList();
+          }
         },
         currentIndex: currentIndex,
         items: const [
@@ -108,7 +113,9 @@ class RootTab extends HookConsumerWidget {
           ),
           child: IconButton(
             icon: const Icon(Icons.settings, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              context.go('/setting');
+            },
             splashRadius: 24.w, // 필요에 따라 조정
           ),
         ),

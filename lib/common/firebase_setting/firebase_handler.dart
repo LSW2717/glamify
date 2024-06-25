@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:glamify/common/data_source/data.dart';
 import 'package:glamify/common/secure_storage/secure_storage.dart';
+import 'package:glamify/user/view_model/user_view_model.dart';
 
 import 'global_variable.dart';
 import 'notification_setting.dart';
@@ -14,17 +15,19 @@ import 'notification_setting.dart';
 final fcmProvider = Provider<FcmManager>((ref) {
   final notificationManager = ref.watch(notificationProvider);
   final storage = ref.watch(secureStorageProvider);
-  return FcmManager(notificationManager, storage);
+  return FcmManager(notificationManager, storage, ref);
 });
 
 class FcmManager {
   final NotificationManager notificationManager;
   final FlutterSecureStorage storage;
+  final Ref ref;
   late String? fcmToken;
 
   FcmManager(
     this.notificationManager,
     this.storage,
+    this.ref,
   ) {
     tokenInit();
   }
@@ -71,8 +74,6 @@ class FcmManager {
     getFcmToken(_firebaseMessaging);
     FirebaseMessaging.onBackgroundMessage(
         notificationManager.firebaseMessagingBackgroundHandler);
-    FirebaseMessaging.onMessage.listen(showFlutterNotification);
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
     _firebaseMessaging.getInitialMessage().then((RemoteMessage? message) {
       if (message != null) {
         if (message.notification != null) {
@@ -85,46 +86,11 @@ class FcmManager {
   }
 
   Future<void> getFcmToken(FirebaseMessaging instance) async {
+
     fcmToken = await notificationManager.getToken(instance);
-    print('토큰 저장됨');
     await storage.write(key: FCM_TOKEN_KEY, value: fcmToken);
-    if (fcmToken != null) {
-      updateFcmToken(fcmToken!);
-    }
-  }
-
-  Future<void> updateFcmToken(String fbFcmToken) async {
-    final int createdTime =
-        ((DateTime.now().microsecondsSinceEpoch) / 1000).round();
-    final serverFcmToken = await getServerFcmToken();
-    //TODO 서버와 통신해서 FCM token 저장
-    // if (fcmToken != null && fcmTokenCreated != null) {
-    //   if ((int.parse(fcmTokenCreated) + 604800) < createdTime ||
-    //       fcmToken != fbFcmToken) {
-    //     await fcmRepository.updateFcmToken(FcmModel(fcmToken: fbFcmToken));
-    //   }
-    // } else if (fbFcmToken != serverFcmToken) {
-    //   await fcmRepository.updateFcmToken(FcmModel(fcmToken: fbFcmToken));
-    // }
-  }
-
-  Future<void> getServerFcmToken() async {
-    try {
-      // final res = await fcmRepository.getFcmToken();
-      // return res.fcmToken;
-    } catch (e) {
-      return;
-    }
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    print(message);
-    if (GlobalVariable.naviagatorState.currentContext != null) {
-      // Navigator.of(GlobalVariable.naviagatorState.currentContext!).push(
-      //   MaterialPageRoute(
-      //     builder: (context) => const NotiView(),
-      //   ),
-      // );
+    if(fcmToken != null){
+      ref.read(userViewModelProvider.notifier).updateFcmToken(fcmToken!);
     }
   }
 

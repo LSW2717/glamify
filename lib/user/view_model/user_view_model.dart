@@ -1,9 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'package:glamify/common/model/empty_dto_model.dart';
 import 'package:glamify/common/model/response_dto.dart';
 import 'package:glamify/common/model/token_response_model.dart';
 import 'package:glamify/common/repository/test_repository.dart';
 import 'package:glamify/user/model/fcm_token_request_model.dart';
+import 'package:glamify/user/model/update_nickname_request_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../chat/repository/chat_repository.dart';
@@ -70,6 +72,8 @@ class UserViewModel extends _$UserViewModel {
 
   Future<void> logout() async {
     state = null;
+    final request = EmptyDto();
+    await userRepository.logout(request);
     await Future.wait(
       [
         storage.delete(key: REFRESH_TOKEN_KEY),
@@ -81,6 +85,23 @@ class UserViewModel extends _$UserViewModel {
   Future<ResponseDto<TokenResponse>> reissue() async {
     final tokens = await userRepository.reissue();
     return tokens;
+  }
+
+  Future<void> updateFcmToken(String fcmToken) async {
+    final request = FcmTokenRequest(pushNotificationToken: fcmToken);
+    await userRepository.updateFcmToken(request);
+  }
+
+  Future<void> updateNickname(String nickname) async{
+    final request = UpdateNicknameRequest(nickname: nickname);
+    await userRepository.updateNickname(request);
+    getMe();
+  }
+
+  Future<void> unsubscribe() async{
+    final request = EmptyDto();
+    await userRepository.unsubscribe(request);
+    state = null;
   }
 
   Future<void> chatCheck() async {

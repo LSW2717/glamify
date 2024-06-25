@@ -50,8 +50,7 @@ class _UserRepository implements UserRepository {
   }
 
   @override
-  Future<ResponseDto<EmptyResponse>> updateFcmToken(
-      FcmTokenRequest request) async {
+  Future<ResponseDto<EmptyDto>> updateFcmToken(FcmTokenRequest request) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
@@ -59,7 +58,7 @@ class _UserRepository implements UserRepository {
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ResponseDto<EmptyResponse>>(Options(
+        _setStreamType<ResponseDto<EmptyDto>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -75,9 +74,9 @@ class _UserRepository implements UserRepository {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ResponseDto<EmptyResponse>.fromJson(
+    final value = ResponseDto<EmptyDto>.fromJson(
       _result.data!,
-      (json) => EmptyResponse.fromJson(json as Map<String, dynamic>),
+      (json) => EmptyDto.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
@@ -109,6 +108,103 @@ class _UserRepository implements UserRepository {
     final value = ResponseDto<TokenResponse>.fromJson(
       _result.data!,
       (json) => TokenResponse.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ResponseDto<EmptyDto>> updateNickname(
+      UpdateNicknameRequest request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseDto<EmptyDto>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user/update_nickname',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResponseDto<EmptyDto>.fromJson(
+      _result.data!,
+      (json) => EmptyDto.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ResponseDto<EmptyDto>> unsubscribe(EmptyDto request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseDto<EmptyDto>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user/unsubscribe',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResponseDto<EmptyDto>.fromJson(
+      _result.data!,
+      (json) => EmptyDto.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ResponseDto<EmptyDto>> logout(EmptyDto request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseDto<EmptyDto>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/auth/logout',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResponseDto<EmptyDto>.fromJson(
+      _result.data!,
+      (json) => EmptyDto.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }

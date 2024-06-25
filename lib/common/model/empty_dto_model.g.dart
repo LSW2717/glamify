@@ -1,13 +1,11 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'empty_response_model.dart';
+part of 'empty_dto_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-EmptyResponse _$EmptyResponseFromJson(Map<String, dynamic> json) =>
-    EmptyResponse();
+EmptyDto _$EmptyDtoFromJson(Map<String, dynamic> json) => EmptyDto();
 
-Map<String, dynamic> _$EmptyResponseToJson(EmptyResponse instance) =>
-    <String, dynamic>{};
+Map<String, dynamic> _$EmptyDtoToJson(EmptyDto instance) => <String, dynamic>{};

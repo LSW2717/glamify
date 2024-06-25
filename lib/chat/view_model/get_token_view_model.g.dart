@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_view_model.dart';
+part of 'get_token_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userViewModelHash() => r'242db705b360dad71d7de0a23e6e5ca521b98aa0';
+String _$getTokenViewModelHash() => r'a071935c0f23a6e7c549568a953df9fbce67792e';
 
-/// See also [UserViewModel].
-@ProviderFor(UserViewModel)
-final userViewModelProvider =
-    NotifierProvider<UserViewModel, UserState?>.internal(
-  UserViewModel.new,
-  name: r'userViewModelProvider',
+/// See also [GetTokenViewModel].
+@ProviderFor(GetTokenViewModel)
+final getTokenViewModelProvider =
+    NotifierProvider<GetTokenViewModel, String>.internal(
+  GetTokenViewModel.new,
+  name: r'getTokenViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$userViewModelHash,
+      : _$getTokenViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$UserViewModel = Notifier<UserState?>;
+typedef _$GetTokenViewModel = Notifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

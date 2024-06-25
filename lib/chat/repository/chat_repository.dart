@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:glamify/chat/model/chat_room_response_model.dart';
+import 'package:glamify/chat/model/leave_chat_room_request_model.dart';
+import 'package:glamify/chat/model/send_message_request_model.dart';
 import 'package:glamify/common/dio/dio.dart';
-import 'package:glamify/common/model/empty_response_model.dart';
+import 'package:glamify/common/model/empty_dto_model.dart';
 import 'package:glamify/common/model/response_dto.dart';
 import 'package:retrofit/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,28 +28,34 @@ abstract class ChatRepository{
   @Headers({
     'accessToken': 'true',
   })
-  Future<ResponseDto<EmptyResponse>> requestChatWaiting();
+  Future<ResponseDto<EmptyDto>> requestChatWaiting();
 
-  @POST('/leave_random_chat_room')
-  @Headers({
-    'accessToken': 'true',
-  })
-  Future<ResponseDto<EmptyResponse>> leaveRandomChatRoom(@Body() TokenRequest request);
-
-
- /* @POST('/send_push_message')
-  @Headers({
-    'accessToken': 'true',
-  })
-  Future<>
-*/
   @POST('/quit_random_chat_waiting')
   @Headers({
     'accessToken': 'true',
   })
-  Future<ResponseDto<EmptyResponse>> quitRandomChatWaiting();
+  Future<ResponseDto<EmptyDto>> quitRandomChatWaiting();
 
 
+
+  @POST('/leave_chat_room')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> leaveChatRoom(@Body() LeaveChatRoomRequest request);
+
+
+  @POST('/send_message')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> sendMessage(@Body() SendMessageRequest request);
+
+  @POST('/get_chat_room_list')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<ChatRoomListResponse>> getChatRoomList(@Body() EmptyDto request);
 
 
 }
