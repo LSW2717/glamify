@@ -4,8 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:glamify/chat/model/chat_room_response_model.dart';
+import 'package:glamify/chat/view_model/chat_list_view_model.dart';
 import 'package:glamify/mypage/view/my_page_update_nickname_view.dart';
 import 'package:go_router/go_router.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../chat/view/chat_detail_view.dart';
 import '../../mypage/view/setting_view.dart';
@@ -37,12 +40,13 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'chatDetail',
             pageBuilder: (context, state) {
-              final user = state.extra as User;
+              final chatRoom = state.extra as ChatRoomResponse;
               return platformPage(
-                  ChatDetailView(
-                    user: user,
-                  ),
-                  'chatDetail');
+                  ChatDetailView(chatRoom: chatRoom), 'chatDetail');
+            },
+            onExit: (context) {
+              ref.read(chatListProvider.notifier).updateChatList();
+              return true;
             },
           ),
           GoRoute(

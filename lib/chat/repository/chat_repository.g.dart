@@ -81,8 +81,7 @@ class _ChatRepository implements ChatRepository {
   }
 
   @override
-  Future<ResponseDto<EmptyDto>> leaveChatRoom(
-      LeaveChatRoomRequest request) async {
+  Future<ResponseDto<EmptyDto>> leaveChatRoom(ChatRoomRequest request) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
@@ -174,6 +173,72 @@ class _ChatRepository implements ChatRepository {
     final value = ResponseDto<ChatRoomListResponse>.fromJson(
       _result.data!,
       (json) => ChatRoomListResponse.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ResponseDto<ChatRoomInfoResponse>> getChatRoomInfo(
+      ChatRoomRequest request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseDto<ChatRoomInfoResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/get_chat_room_info',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResponseDto<ChatRoomInfoResponse>.fromJson(
+      _result.data!,
+      (json) => ChatRoomInfoResponse.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ResponseDto<MessageList>> getAllMessage(
+      ChatMessageListRequest request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseDto<MessageList>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/get_message',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResponseDto<MessageList>.fromJson(
+      _result.data!,
+      (json) => MessageList.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glamify/common/websocket/websocket.dart';
 
 import 'common/firebase_setting/firebase_options.dart';
 import 'common/router/router.dart';
@@ -21,11 +22,29 @@ void main() async {
     ),
   );
 }
-class App extends ConsumerWidget {
+class App extends ConsumerStatefulWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<App> createState() => _AppState();
+}
+
+class _AppState extends ConsumerState<App> {
+  @override
+  void initState() {
+    ref.read(websocketProvider).connect();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    ref.read(websocketProvider).dispose();
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     return MaterialApp.router(
       builder: (context, child) => MediaQuery(

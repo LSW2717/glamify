@@ -4,6 +4,7 @@ import 'package:glamify/common/model/empty_dto_model.dart';
 import 'package:glamify/common/model/response_dto.dart';
 import 'package:glamify/common/model/token_response_model.dart';
 import 'package:glamify/common/repository/test_repository.dart';
+import 'package:glamify/common/websocket/websocket.dart';
 import 'package:glamify/user/model/fcm_token_request_model.dart';
 import 'package:glamify/user/model/update_nickname_request_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -55,6 +56,8 @@ class UserViewModel extends _$UserViewModel {
       await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
 
       final user = await userRepository.getUserInfo();
+      print(user.data!.user.userId);
+      print(state);
 
       state = user.data;
     } catch (e) {
@@ -119,10 +122,13 @@ class UserViewModel extends _$UserViewModel {
       return;
     }
     final user = await userRepository.getUserInfo();
-
+    if (state is UserModel){
+      ref.read(websocketProvider);
+    }
     await storage.write(
         key: REFRESH_TOKEN_KEY, value: user.data?.user.refreshToken);
     state = user.data;
+    print(state);
   }
 
 }

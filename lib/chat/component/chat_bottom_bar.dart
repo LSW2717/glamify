@@ -42,10 +42,10 @@ class ChatBottomBar extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      sendPressed(controller.text);
+                      sendPressed(controller!.text);
                       controller.clear();
                     },
-                    icon: Icon(CupertinoIcons.heart_fill, color: Colors.pinkAccent,),
+                    icon: const Icon(CupertinoIcons.heart_fill, color: Colors.pinkAccent,),
                   ),
                 ],
               ),

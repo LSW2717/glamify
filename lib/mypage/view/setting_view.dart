@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -131,6 +132,7 @@ class SettingView extends ConsumerWidget {
                   false;
               if (confirm) {
                 ref.read(authProvider.notifier).logout();
+                context.pop();
               }
             },
             child: Container(

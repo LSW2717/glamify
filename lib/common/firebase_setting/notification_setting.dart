@@ -5,20 +5,23 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../chat/view_model/chat_list_view_model.dart';
 import 'global_variable.dart';
 
 final notificationProvider = Provider<NotificationManager>((ref) {
   final plugin = FlutterLocalNotificationsPlugin();
-  return NotificationManager(plugin);
+  return NotificationManager(plugin, ref);
 });
 
 class NotificationManager {
   late AndroidNotificationChannel channel;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  final Ref ref;
   bool isFlutterLocalNotificationsInitialized = false;
 
   NotificationManager(
     this.flutterLocalNotificationsPlugin,
+      this.ref,
   );
 
   Future<void> initFlutterLocalNotificationsPlugin() async {
@@ -119,6 +122,7 @@ class NotificationManager {
 
   @pragma('vm:entry-point')
   Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    ref.read(chatListProvider.notifier).updateChatList();
     if (GlobalVariable.naviagatorState.currentContext != null) {
       // Navigator.of(GlobalVariable.naviagatorState.currentContext!).push(
       //   // MaterialPageRoute(

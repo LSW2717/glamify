@@ -5,11 +5,11 @@ import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:glamify/chat/view_model/chat_list_view_model.dart';
 import 'package:glamify/common/data_source/data.dart';
 import 'package:glamify/common/secure_storage/secure_storage.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
 
-import 'global_variable.dart';
 import 'notification_setting.dart';
 
 final fcmProvider = Provider<FcmManager>((ref) {
@@ -37,7 +37,7 @@ class FcmManager {
     AndroidNotification? android = message.notification?.android;
     AppleNotification? apple = message.notification?.apple;
     print(message);
-    // ref.read(userMeProvider.notifier).getMe();
+    ref.read(chatListProvider.notifier).updateChatList();
     if (notification != null && android != null && Platform.isAndroid) {
       notificationManager.flutterLocalNotificationsPlugin.show(
         notification.hashCode,
@@ -72,8 +72,9 @@ class FcmManager {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     notificationManager.getPermission(_firebaseMessaging);
     getFcmToken(_firebaseMessaging);
-    FirebaseMessaging.onBackgroundMessage(
-        notificationManager.firebaseMessagingBackgroundHandler);
+    // FirebaseMessaging.onBackgroundMessage(
+    //     notificationManager.firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessage.listen(showFlutterNotification);
     _firebaseMessaging.getInitialMessage().then((RemoteMessage? message) {
       if (message != null) {
         if (message.notification != null) {

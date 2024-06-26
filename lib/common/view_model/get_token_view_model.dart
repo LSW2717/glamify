@@ -2,7 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:glamify/common/secure_storage/secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/data_source/data.dart';
+import '../data_source/data.dart';
 
 part 'get_token_view_model.g.dart';
 
@@ -26,5 +26,4 @@ class GetTokenViewModel extends _$GetTokenViewModel {
      state = token;
     }
   }
-
 }

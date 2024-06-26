@@ -14,6 +14,8 @@ ChatRoomResponse _$ChatRoomResponseFromJson(Map<String, dynamic> json) =>
       updateDate: DateTime.parse(json['update_date'] as String),
       randomYN: json['random_YN'] as String,
       name: json['name'] as String,
+      lastMessage: json['last_message'] as String,
+      messageCount: (json['message_count'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ChatRoomResponseToJson(ChatRoomResponse instance) =>
@@ -24,6 +26,28 @@ Map<String, dynamic> _$ChatRoomResponseToJson(ChatRoomResponse instance) =>
       'update_date': instance.updateDate.toIso8601String(),
       'random_YN': instance.randomYN,
       'name': instance.name,
+      'last_message': instance.lastMessage,
+      'message_count': instance.messageCount,
+    };
+
+ChatRoomUserResponse _$ChatRoomUserResponseFromJson(
+        Map<String, dynamic> json) =>
+    ChatRoomUserResponse(
+      userId: (json['user_id'] as num).toInt(),
+      nickname: json['nickname'] as String,
+      image: json['image'] as String,
+      messageReadCount: (json['message_read_count'] as num).toInt(),
+      updateDate: DateTime.parse(json['update_date'] as String),
+    );
+
+Map<String, dynamic> _$ChatRoomUserResponseToJson(
+        ChatRoomUserResponse instance) =>
+    <String, dynamic>{
+      'user_id': instance.userId,
+      'nickname': instance.nickname,
+      'image': instance.image,
+      'message_read_count': instance.messageReadCount,
+      'update_date': instance.updateDate.toIso8601String(),
     };
 
 ChatRoomListResponse _$ChatRoomListResponseFromJson(
@@ -38,4 +62,21 @@ Map<String, dynamic> _$ChatRoomListResponseToJson(
         ChatRoomListResponse instance) =>
     <String, dynamic>{
       'chat_room_list': instance.chatRoomList,
+    };
+
+ChatRoomInfoResponse _$ChatRoomInfoResponseFromJson(
+        Map<String, dynamic> json) =>
+    ChatRoomInfoResponse(
+      chatRoomInfo: ChatRoomResponse.fromJson(
+          json['chat_room_info'] as Map<String, dynamic>),
+      chatRoomUsers: (json['chat_room_users'] as List<dynamic>)
+          .map((e) => ChatRoomUserResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ChatRoomInfoResponseToJson(
+        ChatRoomInfoResponse instance) =>
+    <String, dynamic>{
+      'chat_room_info': instance.chatRoomInfo,
+      'chat_room_users': instance.chatRoomUsers,
     };

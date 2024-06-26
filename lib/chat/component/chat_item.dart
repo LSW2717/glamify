@@ -32,41 +32,61 @@ class ChatItem extends StatelessWidget {
             color: Colors.white,
             padding: EdgeInsets.all(16.w),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: 80.w,
-                  height: 80.w,
-                  child: user.imageUrl == null
-                      ? Image.asset(
-                          'asset/img/profile.png',
-                          width: 80.w,
-                          height: 80.w,
-                        )
-                      : Image.network(
-                          '${user.imageUrl}',
-                          width: 80.w,
-                          height: 80.w,
-                          fit: BoxFit.cover,
-                        ),
-                ),
-                SizedBox(width: 17.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Row(
                   children: [
-                    Text(
-                      name,
-                      style: headerText2,
+                    SizedBox(
+                      width: 80.w,
+                      height: 80.w,
+                      child: user.imageUrl == null
+                          ? Image.asset(
+                              'asset/img/profile.png',
+                              width: 80.w,
+                              height: 80.w,
+                            )
+                          : Image.network(
+                              '${user.imageUrl}',
+                              width: 80.w,
+                              height: 80.w,
+                              fit: BoxFit.cover,
+                            ),
                     ),
-                    SizedBox(height: 5.w),
-                    Text(
-                      lastMessage,
-                      style: headerText4.copyWith(color: gray700),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
+                    SizedBox(width: 17.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          name,
+                          style: headerText2,
+                        ),
+                        SizedBox(height: 5.w),
+                        Text(
+                          lastMessage,
+                          style: headerText4.copyWith(color: gray700),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ],
+                    )
                   ],
-                )
+                ),
+                Container(
+                  height: 30.w,
+                  width: 30.w,
+                  margin: EdgeInsets.only(right: 10.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: main1,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '+2',
+                      style: headerText5.copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
