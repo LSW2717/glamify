@@ -10,6 +10,7 @@ MessageData _$MessageDataFromJson(Map<String, dynamic> json) => MessageData(
       senderId: (json['sender_id'] as num).toInt(),
       message: json['message'] as String,
       chatRoomId: (json['chat_room_id'] as num).toInt(),
+      chatId: json['chat_id'] as String,
     );
 
 Map<String, dynamic> _$MessageDataToJson(MessageData instance) =>
@@ -17,6 +18,7 @@ Map<String, dynamic> _$MessageDataToJson(MessageData instance) =>
       'sender_id': instance.senderId,
       'message': instance.message,
       'chat_room_id': instance.chatRoomId,
+      'chat_id': instance.chatId,
     };
 
 ChatMessageResponse _$ChatMessageResponseFromJson(Map<String, dynamic> json) =>

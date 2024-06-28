@@ -5,18 +5,21 @@ import 'package:go_router/go_router.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/const/typography.dart';
+import '../model/chat_room_response_model.dart';
 
 class ChatItem extends StatelessWidget {
   final User user;
   final String name;
   final String lastMessage;
   final VoidCallback onTap;
+  final int count;
 
   const ChatItem({
     required this.user,
     required this.name,
     required this.lastMessage,
     required this.onTap,
+    required this.count,
     super.key,
   });
 
@@ -72,7 +75,7 @@ class ChatItem extends StatelessWidget {
                     )
                   ],
                 ),
-                Container(
+                count == 0 ? const SizedBox.shrink() : Container(
                   height: 30.w,
                   width: 30.w,
                   margin: EdgeInsets.only(right: 10.w),
@@ -82,7 +85,7 @@ class ChatItem extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '+2',
+                      '+$count',
                       style: headerText5.copyWith(color: Colors.white),
                     ),
                   ),

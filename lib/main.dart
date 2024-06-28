@@ -22,6 +22,7 @@ void main() async {
     ),
   );
 }
+
 class App extends ConsumerStatefulWidget {
   const App({super.key});
 
@@ -41,7 +42,6 @@ class _AppState extends ConsumerState<App> {
     ref.read(websocketProvider).dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {

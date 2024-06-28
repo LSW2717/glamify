@@ -37,8 +37,6 @@ abstract class ChatRepository{
   })
   Future<ResponseDto<EmptyDto>> quitRandomChatWaiting();
 
-
-
   @POST('/leave_chat_room')
   @Headers({
     'accessToken': 'true',

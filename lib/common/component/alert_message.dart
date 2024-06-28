@@ -29,25 +29,25 @@ class AlarmMessage extends StatelessWidget {
       actionsAlignment: MainAxisAlignment.spaceBetween,
       title: title != null ? Text(
         title!,
-        style: headerText3.copyWith(color: gray800),
+        style: headerText2.copyWith(color: gray800),
       ) : null,
       content: Text(
         content,
-        style: headerText5.copyWith(color: gray600),
+        style: headerText4.copyWith(color: gray600),
       ),
       actions: <Widget>[
         TextButton(
           onPressed: () => context.pop(false),
           child: Text(
             '취소',
-            style: headerText5.copyWith(color: gray700),
+            style: headerText4.copyWith(color: gray700),
           ),
         ),
         TextButton(
           onPressed: () => context.pop(true),
           child: Text(
             '확인',
-            style: headerText5.copyWith(color: main1),
+            style: headerText4.copyWith(color: main1),
           ),
         ),
       ],

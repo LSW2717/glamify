@@ -9,11 +9,14 @@ class MessageData {
   final String message;
   @JsonKey(name: 'chat_room_id')
   final int chatRoomId;
+  @JsonKey(name: 'chat_id')
+  final String chatId;
 
   MessageData({
     required this.senderId,
     required this.message,
     required this.chatRoomId,
+    required this.chatId,
   });
 
   factory MessageData.fromJson(Map<String, dynamic> json) => _$MessageDataFromJson(json);

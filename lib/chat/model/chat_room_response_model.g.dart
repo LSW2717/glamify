@@ -56,12 +56,16 @@ ChatRoomListResponse _$ChatRoomListResponseFromJson(
       chatRoomList: (json['chat_room_list'] as List<dynamic>)
           .map((e) => ChatRoomResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
+      readCountList: (json['read_count_list'] as List<dynamic>)
+          .map((e) => ReadCountList.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ChatRoomListResponseToJson(
         ChatRoomListResponse instance) =>
     <String, dynamic>{
       'chat_room_list': instance.chatRoomList,
+      'read_count_list': instance.readCountList,
     };
 
 ChatRoomInfoResponse _$ChatRoomInfoResponseFromJson(
@@ -79,4 +83,16 @@ Map<String, dynamic> _$ChatRoomInfoResponseToJson(
     <String, dynamic>{
       'chat_room_info': instance.chatRoomInfo,
       'chat_room_users': instance.chatRoomUsers,
+    };
+
+ReadCountList _$ReadCountListFromJson(Map<String, dynamic> json) =>
+    ReadCountList(
+      chatRoomId: (json['chat_room_id'] as num).toInt(),
+      messageReadCount: (json['message_read_count'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$ReadCountListToJson(ReadCountList instance) =>
+    <String, dynamic>{
+      'chat_room_id': instance.chatRoomId,
+      'message_read_count': instance.messageReadCount,
     };

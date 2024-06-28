@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'chat_room_response_model.g.dart';
@@ -76,9 +78,12 @@ class ChatRoomUserResponse {
 class ChatRoomListResponse {
   @JsonKey(name: 'chat_room_list')
   final List<ChatRoomResponse> chatRoomList;
+  @JsonKey(name: 'read_count_list')
+  final List<ReadCountList> readCountList;
 
   ChatRoomListResponse({
     required this.chatRoomList,
+    required this.readCountList,
   });
 
   factory ChatRoomListResponse.fromJson(Map<String, dynamic> json) =>
@@ -101,4 +106,20 @@ class ChatRoomInfoResponse {
 
   factory ChatRoomInfoResponse.fromJson(Map<String, dynamic> json) => _$ChatRoomInfoResponseFromJson(json);
   Map<String, dynamic> toJson() => _$ChatRoomInfoResponseToJson(this);
+}
+
+@JsonSerializable()
+class ReadCountList {
+  @JsonKey(name: 'chat_room_id')
+  final int chatRoomId;
+  @JsonKey(name: 'message_read_count')
+  final int messageReadCount;
+
+  ReadCountList({
+    required this.chatRoomId,
+    required this.messageReadCount,
+  });
+
+  factory ReadCountList.fromJson(Map<String, dynamic> json) => _$ReadCountListFromJson(json);
+  Map<String, dynamic> toJson() => _$ReadCountListToJson(this);
 }

@@ -6,6 +6,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glamify/chat/model/chat_room_response_model.dart';
 import 'package:glamify/chat/view_model/chat_list_view_model.dart';
+import 'package:glamify/chat/view_model/chat_message_view_model.dart';
 import 'package:glamify/mypage/view/my_page_update_nickname_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -41,11 +42,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'chatDetail',
             pageBuilder: (context, state) {
               final chatRoom = state.extra as ChatRoomResponse;
-              return platformPage(
-                  ChatDetailView(chatRoom: chatRoom), 'chatDetail');
+              return platformPageWithoutKey(
+                  ChatDetailView(chatRoom: chatRoom));
             },
             onExit: (context) {
               ref.read(chatListProvider.notifier).updateChatList();
+              ref.refresh(chatMessageProvider);
               return true;
             },
           ),

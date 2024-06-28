@@ -20,7 +20,6 @@ class ChatView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final chatListState = ref.watch(chatListProvider);
     final userState = ref.watch(userViewModelProvider);
-    final chatState = ref.watch(chatDetailProvider);
 
     if (userState is! LoadedUserState) {
       return Center(
@@ -44,6 +43,7 @@ class ChatView extends ConsumerWidget {
     }
     if (chatListState is LoadedChatListState) {
       final chatList = chatListState.response.chatRoomList;
+      final chatReadCount = chatListState.response.readCountList;
       return chatList.isEmpty
           ? const ChatEmptyView()
           : CustomScrollView(
@@ -52,22 +52,23 @@ class ChatView extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      ...chatList.map(
-                        (data) => ChatItem(
-                          user: User(id: data.ownerUserId.toString()),
-                          name: data.name,
-                          lastMessage: data.lastMessage,
-                          onTap: () {
-                            ref
-                                .read(chatMessageProvider.notifier)
-                                .getMessageList(data.chatRoomId);
-                            ref
-                                .read(chatDetailProvider.notifier)
-                                .getMessageInfo(data.chatRoomId);
-                            context.push('/chatDetail',extra: data);
-                          },
-                        ),
-                      ),
+                      ...chatList.asMap().map((index, data) {
+                        return MapEntry(
+                          index,
+                          ChatItem(
+                            user: User(id: data.ownerUserId.toString()),
+                            name: data.name,
+                            lastMessage: data.lastMessage,
+                            onTap: () {
+                              ref.read(chatMessageProvider.notifier).getMessageList(data.chatRoomId);
+                              ref.read(chatDetailProvider.notifier).getMessageInfo(data.chatRoomId);
+                              context.push('/chatDetail', extra: data);
+                              print(data.chatRoomId);
+                            },
+                            count: data.messageCount - chatReadCount[index].messageReadCount, // 여기서 index 사용
+                          ),
+                        );
+                      }).values.toList(),
                     ],
                   ),
                 ),

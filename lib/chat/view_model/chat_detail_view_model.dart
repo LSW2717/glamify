@@ -4,12 +4,12 @@ import 'package:glamify/chat/model/chat_room_response_model.dart';
 import 'package:glamify/chat/repository/chat_repository.dart';
 
 final chatDetailProvider =
-    StateNotifierProvider<ChatDetailViewModel, ChatState>((ref) {
+    StateNotifierProvider<ChatDetailViewModel, ChattingState>((ref) {
   final repository = ref.watch(chatRepositoryProvider);
   return ChatDetailViewModel(repository, ref);
 });
 
-class ChatDetailViewModel extends StateNotifier<ChatState> {
+class ChatDetailViewModel extends StateNotifier<ChattingState> {
   final ChatRepository repository;
   final Ref ref;
 
@@ -31,13 +31,23 @@ class ChatDetailViewModel extends StateNotifier<ChatState> {
       print(e.toString());
     }
   }
+
+  Future<void> leaveChatRoom(int id) async {
+    try {
+      final request = ChatRoomRequest(chatRoomId: id);
+      await repository.leaveChatRoom(request);
+    } catch (e) {
+      print(e.toString());
+    }
+
+  }
 }
 
-abstract class ChatState {
-  const ChatState();
+abstract class ChattingState {
+  const ChattingState();
 }
 
-class LoadedChatState extends ChatState {
+class LoadedChatState extends ChattingState {
   final ChatRoomInfoResponse infoResponse;
 
   const LoadedChatState(
@@ -45,11 +55,11 @@ class LoadedChatState extends ChatState {
   );
 }
 
-class LoadingChatState extends ChatState {
+class LoadingChatState extends ChattingState {
   const LoadingChatState();
 }
 
-class ErrorChatState extends ChatState {
+class ErrorChatState extends ChattingState {
   final String message;
 
   const ErrorChatState(
