@@ -1,21 +1,33 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glamify/chat/view_model/chat_list_view_model.dart';
+import 'package:glamify/common/firebase_setting/notification_setting.dart';
 import 'package:glamify/common/websocket/websocket.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'common/firebase_setting/firebase_options.dart';
 import 'common/router/router.dart';
+import 'home/view_model/home_random_chat_view_model.dart';
 
-void main() async {
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // 세로 방향 고정
   ]);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  initFlutterLocalNotificationsPlugin();
+  getPermission(FirebaseMessaging.instance);
   runApp(
     const ProviderScope(
       child: App(),
@@ -33,8 +45,17 @@ class App extends ConsumerStatefulWidget {
 class _AppState extends ConsumerState<App> {
   @override
   void initState() {
-    ref.read(websocketProvider).connect();
     super.initState();
+    ref.read(websocketProvider).connect();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      await showFlutterNotification(message);
+      ref.read(homeRandomChatViewModelProvider.notifier).getRandomChatInfo();
+      ref.read(chatListProvider.notifier).updateChatList();
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      // 알림 클릭 시 처리 로직 추가
+    });
   }
 
   @override

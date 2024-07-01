@@ -123,3 +123,58 @@ class ReadCountList {
   factory ReadCountList.fromJson(Map<String, dynamic> json) => _$ReadCountListFromJson(json);
   Map<String, dynamic> toJson() => _$ReadCountListToJson(this);
 }
+
+@JsonSerializable()
+class RandomChatInfoResponse {
+  @JsonKey(name: 'random_chat_info')
+  final ChatRoomResponse? randomChatInfo;
+
+  RandomChatInfoResponse({
+    this.randomChatInfo
+  });
+
+  factory RandomChatInfoResponse.fromJson(Map<String, dynamic> json) => _$RandomChatInfoResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$RandomChatInfoResponseToJson(this);
+}
+
+@JsonSerializable()
+class ChatInvitationsResponse {
+  @JsonKey(name: 'chat_invitations')
+  final List<ChatInvitation> chatInvitations;
+  ChatInvitationsResponse({
+    required this.chatInvitations,
+  });
+
+  factory ChatInvitationsResponse.fromJson(Map<String, dynamic> json) => _$ChatInvitationsResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$ChatInvitationsResponseToJson(this);
+}
+
+@JsonSerializable()
+class ChatInvitation {
+  @JsonKey(name: 'chat_invitation_id')
+  final int chatInvitationId;
+  @JsonKey(name: 'sender_id')
+  final int senderId;
+  @JsonKey(name: 'target_id')
+  final int targetId;
+
+  final String message;
+
+  @JsonKey(name: 'register_date')
+  final DateTime registerDate;
+
+  @JsonKey(name: 'update_date')
+  final DateTime updateDate;
+
+  ChatInvitation({
+    required this.chatInvitationId,
+    required this.senderId,
+    required this.targetId,
+    required this.message,
+    required this.registerDate,
+    required this.updateDate,
+  });
+
+  factory ChatInvitation.fromJson(Map<String, dynamic> json) => _$ChatInvitationFromJson(json);
+  Map<String, dynamic> toJson() => _$ChatInvitationToJson(this);
+}

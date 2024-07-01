@@ -3,6 +3,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glamify/common/layout/default_layout.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/const/typography.dart';
@@ -10,10 +11,7 @@ import '../model/chat_room_response_model.dart';
 import 'chat_bottom_bar.dart';
 
 class ChatLoading extends StatefulWidget {
-  final ChatRoomResponse chatRoom;
-
   const ChatLoading({
-    required this.chatRoom,
     super.key,
   });
 
@@ -41,6 +39,9 @@ class _ChatLoadingState extends State<ChatLoading> {
     return DefaultLayout(
       needBackButton: true,
       resizeToAvoidBottomInset: true,
+      backAction: () {
+        context.pop();
+      },
       action: [
         IconButton(
           onPressed: () {},
@@ -57,7 +58,7 @@ class _ChatLoadingState extends State<ChatLoading> {
         onSendPressed: (text) {},
         showUserAvatars: true,
         showUserNames: true,
-        user: User(id: widget.chatRoom.ownerUserId.toString(),firstName: widget.chatRoom.name),
+        user: User(id: ''),
         emptyState: const Center(
             child: CircularProgressIndicator(
           color: main1,

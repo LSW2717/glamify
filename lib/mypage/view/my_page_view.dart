@@ -7,6 +7,8 @@ import 'package:glamify/user/model/user_model.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../common/const/colors.dart';
+
 class MyPageView extends ConsumerWidget {
   const MyPageView({super.key});
 
@@ -20,10 +22,19 @@ class MyPageView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 userState.user.image.isEmpty
-                    ? SizedBox(
-                        width: 160.w,
-                        height: 160.w,
-                        child: Image.asset('asset/img/profilepink.png'),
+                    ? Container(
+                        width: 200.w,
+                        height: 200.w,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: base3,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.person,
+                            size: 150.w,
+                          ),
+                        ),
                       )
                     : InkWell(
                         customBorder: const CircleBorder(),

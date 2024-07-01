@@ -17,6 +17,7 @@ class DefaultLayout extends StatelessWidget {
   final bool extendBodyBehindAppBar;
   final bool removeAppBar;
   final bool resizeToAvoidBottomInset;
+  final VoidCallback backAction;
 
   const DefaultLayout({
     this.backgroundColor,
@@ -28,6 +29,7 @@ class DefaultLayout extends StatelessWidget {
     this.extendBodyBehindAppBar = false,
     this.removeAppBar = false,
     this.resizeToAvoidBottomInset = false,
+    required this.backAction,
     super.key,
   });
 
@@ -54,14 +56,13 @@ class DefaultLayout extends StatelessWidget {
       leadingWidth: 300.w,
       leading: Row(
         children: [
-          needBackButton
-              ? Padding(
+          needBackButton ? Padding(
             padding: EdgeInsets.only(
               left: 0.w,
             ),
             child: IconButton(
               onPressed: () {
-                context.pop();
+                  context.pop();
               },
               icon: SvgPicture.asset(
                 'asset/svg/back.svg',

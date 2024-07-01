@@ -25,35 +25,47 @@ class ChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
+    return Container(
+      margin: EdgeInsets.all(5.w),
+      child: Ink(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
           onTap: onTap,
           child: Container(
-            width: 390.w,
+            width: 385.w,
             height: 100.w,
-            color: Colors.white,
             padding: EdgeInsets.all(16.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    SizedBox(
+                    Container(
                       width: 80.w,
                       height: 80.w,
-                      child: user.imageUrl == null
-                          ? Image.asset(
-                              'asset/img/profile.png',
-                              width: 80.w,
-                              height: 80.w,
-                            )
-                          : Image.network(
-                              '${user.imageUrl}',
-                              width: 80.w,
-                              height: 80.w,
-                              fit: BoxFit.cover,
-                            ),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: base3,
+                      ),
+
+                      child: Center(
+                        child: Icon(
+                          Icons.person,
+                          size: 50.w,
+                        ),
+                      ),
                     ),
                     SizedBox(width: 17.w),
                     Column(
@@ -94,18 +106,7 @@ class ChatItem extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          width: 358.w,
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: gray500,
-                width: 1,
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

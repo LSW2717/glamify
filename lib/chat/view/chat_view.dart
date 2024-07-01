@@ -6,6 +6,7 @@ import 'package:glamify/chat/view/chat_empty_view.dart';
 import 'package:glamify/chat/view_model/chat_detail_view_model.dart';
 import 'package:glamify/chat/view_model/chat_list_view_model.dart';
 import 'package:glamify/chat/view_model/chat_message_view_model.dart';
+import 'package:glamify/chat/view_model/chat_room_id_view_model.dart';
 import 'package:glamify/common/const/colors.dart';
 import 'package:glamify/common/const/typography.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
@@ -62,7 +63,8 @@ class ChatView extends ConsumerWidget {
                             onTap: () {
                               ref.read(chatMessageProvider.notifier).getMessageList(data.chatRoomId);
                               ref.read(chatDetailProvider.notifier).getMessageInfo(data.chatRoomId);
-                              context.push('/chatDetail', extra: data);
+                              ref.read(chatRoomIdViewModelProvider.notifier).setRoomId(data.chatRoomId);
+                              context.push('/chatDetail', extra: data.chatRoomId);
                               print(data.chatRoomId);
                             },
                             count: data.messageCount - chatReadCount[index].messageReadCount, // 여기서 index 사용

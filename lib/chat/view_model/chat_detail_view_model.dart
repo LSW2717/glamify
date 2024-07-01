@@ -39,8 +39,40 @@ class ChatDetailViewModel extends StateNotifier<ChattingState> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<void> updateMessageReadCount(int id) async{
+    try {
+      final request = ChatRoomRequest(chatRoomId: id);
+      await repository.updateMessageReadCount(request);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  Future<void> inviteChat(InviteChatRequest request) async{
+    try {
+      await repository.inviteChat(request);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  Future<void> confirmInviteChat(InvitationRequest request) async{
+    try {
+      await repository.confirmChatInvitation(request);
+    } catch (e) {
+      print(e.toString());
+    }
 
   }
+  Future<void> rejectInviteChat(InvitationRequest request) async{
+    try {
+      await repository.rejectChatInvitation(request);
+    } catch (e) {
+      print(e.toString());
+    }
+
+  }
+
 }
 
 abstract class ChattingState {

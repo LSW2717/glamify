@@ -96,3 +96,52 @@ Map<String, dynamic> _$ReadCountListToJson(ReadCountList instance) =>
       'chat_room_id': instance.chatRoomId,
       'message_read_count': instance.messageReadCount,
     };
+
+RandomChatInfoResponse _$RandomChatInfoResponseFromJson(
+        Map<String, dynamic> json) =>
+    RandomChatInfoResponse(
+      randomChatInfo: json['random_chat_info'] == null
+          ? null
+          : ChatRoomResponse.fromJson(
+              json['random_chat_info'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$RandomChatInfoResponseToJson(
+        RandomChatInfoResponse instance) =>
+    <String, dynamic>{
+      'random_chat_info': instance.randomChatInfo,
+    };
+
+ChatInvitationsResponse _$ChatInvitationsResponseFromJson(
+        Map<String, dynamic> json) =>
+    ChatInvitationsResponse(
+      chatInvitations: (json['chat_invitations'] as List<dynamic>)
+          .map((e) => ChatInvitation.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ChatInvitationsResponseToJson(
+        ChatInvitationsResponse instance) =>
+    <String, dynamic>{
+      'chat_invitations': instance.chatInvitations,
+    };
+
+ChatInvitation _$ChatInvitationFromJson(Map<String, dynamic> json) =>
+    ChatInvitation(
+      chatInvitationId: (json['chat_invitation_id'] as num).toInt(),
+      senderId: (json['sender_id'] as num).toInt(),
+      targetId: (json['target_id'] as num).toInt(),
+      message: json['message'] as String,
+      registerDate: DateTime.parse(json['register_date'] as String),
+      updateDate: DateTime.parse(json['update_date'] as String),
+    );
+
+Map<String, dynamic> _$ChatInvitationToJson(ChatInvitation instance) =>
+    <String, dynamic>{
+      'chat_invitation_id': instance.chatInvitationId,
+      'sender_id': instance.senderId,
+      'target_id': instance.targetId,
+      'message': instance.message,
+      'register_date': instance.registerDate.toIso8601String(),
+      'update_date': instance.updateDate.toIso8601String(),
+    };

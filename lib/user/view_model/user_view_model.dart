@@ -20,10 +20,12 @@ part 'user_view_model.g.dart';
 
 @Riverpod(keepAlive: true)
 class UserViewModel extends _$UserViewModel {
-
   UserRepository get userRepository => ref.watch(userRepositoryProvider);
+
   TestRepository get testRepository => ref.watch(testRepositoryProvider);
+
   ChatRepository get chatRepository => ref.watch(chatRepositoryProvider);
+
   FlutterSecureStorage get storage => ref.watch(secureStorageProvider);
 
   @override
@@ -31,6 +33,7 @@ class UserViewModel extends _$UserViewModel {
     getMe();
     return LoadingUserState();
   }
+
   Future<void> login() async {
     state = LoadingUserState();
     try {
@@ -59,18 +62,10 @@ class UserViewModel extends _$UserViewModel {
       print(user.data!.user.userId);
       print(state);
 
-      state = user.data;
+      state = LoadedUserState(user: user.data!.user);
     } catch (e) {
       state = ErrorUserState(message: e.toString());
     }
-  }
-
-  Future<void> healthCheck() async {
-    Dummy dummy = Dummy(dummy: 5);
-    final check = await testRepository.postHealthCheck(dummy);
-    print(check.code);
-    print(check.data);
-    print(check.message);
   }
 
   Future<void> logout() async {
@@ -90,18 +85,31 @@ class UserViewModel extends _$UserViewModel {
     return tokens;
   }
 
+  Future<void> tokenLogin(dynamic refreshToken) async {
+    await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
+    final token = await userRepository.reissue();
+    if(token.data != null){
+      await storage.write(key: ACCESS_TOKEN_KEY, value: token.data!.accessToken);
+      await storage.write(key: REFRESH_TOKEN_KEY, value: token.data!.refreshToken);
+    }
+    final user = await userRepository.getUserInfo();
+    state = LoadedUserState(user: user.data!.user);
+
+  }
+
   Future<void> updateFcmToken(String fcmToken) async {
     final request = FcmTokenRequest(pushNotificationToken: fcmToken);
     await userRepository.updateFcmToken(request);
+
   }
 
-  Future<void> updateNickname(String nickname) async{
+  Future<void> updateNickname(String nickname) async {
     final request = UpdateNicknameRequest(nickname: nickname);
     await userRepository.updateNickname(request);
     getMe();
   }
 
-  Future<void> unsubscribe() async{
+  Future<void> unsubscribe() async {
     final request = EmptyDto();
     await userRepository.unsubscribe(request);
     state = null;
@@ -122,13 +130,9 @@ class UserViewModel extends _$UserViewModel {
       return;
     }
     final user = await userRepository.getUserInfo();
-    if (state is UserModel){
-      ref.read(websocketProvider);
-    }
     await storage.write(
         key: REFRESH_TOKEN_KEY, value: user.data?.user.refreshToken);
     state = user.data;
     print(state);
   }
-
 }

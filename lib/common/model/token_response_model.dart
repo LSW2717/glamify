@@ -4,7 +4,9 @@ part 'token_response_model.g.dart';
 
 @JsonSerializable()
 class TokenResponse {
+  @JsonKey(name: 'access_token')
   String accessToken;
+  @JsonKey(name: 'refresh_token')
   String refreshToken;
 
   TokenResponse({

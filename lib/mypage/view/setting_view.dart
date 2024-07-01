@@ -22,12 +22,14 @@ class SettingView extends ConsumerWidget {
       title: '설정',
       needBackButton: true,
       backgroundColor: Colors.white,
+      backAction: () {
+        context.pop();
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () {
-            },
+            onTap: () {},
             child: Container(
               width: 375.w,
               height: 64.w,
@@ -43,7 +45,7 @@ class SettingView extends ConsumerWidget {
                 children: [
                   Text(
                     '알림 설정',
-                    style: headerText4.copyWith(color: gray700),
+                    style: headerText3.copyWith(color: gray700),
                   ),
                   SvgPicture.asset('asset/svg/next.svg'),
                 ],
@@ -52,8 +54,7 @@ class SettingView extends ConsumerWidget {
           ),
           GestureDetector(
             onTap: () async {
-              const url =
-                  'https://roan-octagon-c70.notion.site/c0490db2d4a6412e83d27492ef0b5cd2';
+              const url = '';
               if (await canLaunchUrlString(url)) {
                 await launchUrlString(url);
               } else {
@@ -75,7 +76,7 @@ class SettingView extends ConsumerWidget {
                 children: [
                   Text(
                     '서비스 이용약관',
-                    style: headerText4.copyWith(color: gray700),
+                    style: headerText3.copyWith(color: gray700),
                   ),
                   SvgPicture.asset('asset/svg/next.svg'),
                 ],
@@ -91,7 +92,7 @@ class SettingView extends ConsumerWidget {
               children: [
                 Text(
                   '버전',
-                  style: headerText4.copyWith(color: gray700),
+                  style: headerText3.copyWith(color: gray700),
                 ),
                 SizedBox(
                   child: FutureBuilder<PackageInfo>(
@@ -121,14 +122,14 @@ class SettingView extends ConsumerWidget {
           GestureDetector(
             onTap: () async {
               final bool confirm = await showDialog<bool>(
-                context: context,
-                builder: (BuildContext context) {
-                  return const AlarmMessage(
-                    title: '로그아웃',
-                    content: '로그아웃 하시겠습니까?',
-                  );
-                },
-              ) ??
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlarmMessage(
+                        title: '로그아웃',
+                        content: '로그아웃 하시겠습니까?',
+                      );
+                    },
+                  ) ??
                   false;
               if (confirm) {
                 ref.read(authProvider.notifier).logout();
@@ -150,7 +151,7 @@ class SettingView extends ConsumerWidget {
                 children: [
                   Text(
                     '로그아웃',
-                    style: headerText4.copyWith(color: gray700),
+                    style: headerText3.copyWith(color: gray700),
                   ),
                 ],
               ),
@@ -160,14 +161,14 @@ class SettingView extends ConsumerWidget {
           GestureDetector(
             onTap: () async {
               final bool confirm = await showDialog<bool>(
-                context: context,
-                builder: (BuildContext context) {
-                  return const AlarmMessage(
-                    title: '정말로 탈퇴하시겠어요?',
-                    content: '탈퇴 버튼을 누르면 계정은 삭제되며 복구되지 않습니다.',
-                  );
-                },
-              ) ??
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlarmMessage(
+                        title: '정말로 탈퇴하시겠어요?',
+                        content: '탈퇴 버튼을 누르면 계정은 삭제되며 복구되지 않습니다.',
+                      );
+                    },
+                  ) ??
                   false;
               if (confirm) {
                 ref.read(userViewModelProvider.notifier).unsubscribe();
@@ -175,7 +176,7 @@ class SettingView extends ConsumerWidget {
             },
             child: Text(
               '탈퇴하기',
-              style: bodyText1.copyWith(color: gray500),
+              style: headerText5.copyWith(color: gray500),
             ),
           ),
           // SizedBox(height: 52.w),

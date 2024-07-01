@@ -20,6 +20,9 @@ class UpdateNickNameView extends ConsumerWidget {
       title: '내 정보 수정',
       needBackButton: true,
       backgroundColor: Colors.white,
+      backAction: () {
+        context.pop();
+      },
       child: SafeArea(
         top: false,
         child: Padding(

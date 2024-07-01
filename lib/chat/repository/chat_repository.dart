@@ -7,6 +7,7 @@ import 'package:glamify/common/dio/dio.dart';
 import 'package:glamify/common/model/empty_dto_model.dart';
 import 'package:glamify/common/model/response_dto.dart';
 import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data_source/data.dart';
@@ -67,5 +68,41 @@ abstract class ChatRepository{
     'accessToken': 'true',
   })
   Future<ResponseDto<MessageList>> getAllMessage(@Body() ChatMessageListRequest request);
+
+  @POST('/get_random_chat_info')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<RandomChatInfoResponse>> getRandomChatInfo(@Body() EmptyDto request);
+
+  @POST('/update_message_read_count')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> updateMessageReadCount(@Body() ChatRoomRequest request);
+
+  @POST('/invite_chat')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> inviteChat(@Body() InviteChatRequest request);
+
+  @POST('/get_chat_invitation')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<ChatInvitationsResponse>> getChatInvitation(@Body() EmptyDto request);
+
+  @POST('/confirm_chat_invitation')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> confirmChatInvitation(@Body() InvitationRequest request);
+
+  @POST('/reject_chat_invitation')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> rejectChatInvitation(@Body() InvitationRequest request);
 
 }

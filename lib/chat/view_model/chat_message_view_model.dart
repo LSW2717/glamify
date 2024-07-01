@@ -38,6 +38,7 @@ class ChatMessageViewModel extends StateNotifier<List<types.Message>> {
       lastMessageDate = chatMessages.data!.messages.last.registerDate;
       final List<types.Message> messageList =
           chatMessages.data!.messages.map(toTextMessage).toList();
+
       for (int i = 0; i < messageList.length; i++) {
         Random random = Random();
         messageList[i] = messageList[i].copyWith(
@@ -55,10 +56,10 @@ class ChatMessageViewModel extends StateNotifier<List<types.Message>> {
     }
   }
 
-  Future<void> sendMessage(String message, int chatRoomId, String id) async {
+  Future<void> sendMessage(String message, int chatRoomId) async {
     try {
       final request =
-          SendMessageRequest(message: message, chatRoomId: chatRoomId);
+          SendMessageRequest(message: message, chatRoomId: chatRoomId, messageType: 'TEXT');
       await repository.sendMessage(request);
     } catch (e) {
       print(e.toString());

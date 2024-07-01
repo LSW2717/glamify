@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_view_model.dart';
+part of 'home_random_chat_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userViewModelHash() => r'0cf88dcbe8479edca5c1e4ffa304881ea30f34a4';
+String _$homeRandomChatViewModelHash() =>
+    r'6484efc15f5618fd76db1b0f618a38f9419dbf0d';
 
-/// See also [UserViewModel].
-@ProviderFor(UserViewModel)
-final userViewModelProvider =
-    NotifierProvider<UserViewModel, UserState?>.internal(
-  UserViewModel.new,
-  name: r'userViewModelProvider',
+/// See also [HomeRandomChatViewModel].
+@ProviderFor(HomeRandomChatViewModel)
+final homeRandomChatViewModelProvider =
+    NotifierProvider<HomeRandomChatViewModel, HomeChatState>.internal(
+  HomeRandomChatViewModel.new,
+  name: r'homeRandomChatViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$userViewModelHash,
+      : _$homeRandomChatViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$UserViewModel = Notifier<UserState?>;
+typedef _$HomeRandomChatViewModel = Notifier<HomeChatState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
