@@ -48,6 +48,12 @@ class UserModel {
   @JsonKey(name: 'push_notification_token')
   final String pushNotificationToken;
 
+  @JsonKey(name: 'push_notification_agreement_YN')
+  final String pushNotificationAgreement;
+
+  @JsonKey(name: 'permission_type')
+  final String permissionType;
+
   UserModel({
     required this.userId,
     required this.nickname,
@@ -56,6 +62,8 @@ class UserModel {
     this.phoneNumber,
     required this.refreshToken,
     required this.pushNotificationToken,
+    required this.pushNotificationAgreement,
+    required this.permissionType,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

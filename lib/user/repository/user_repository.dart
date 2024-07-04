@@ -2,6 +2,7 @@ import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glamify/common/model/empty_dto_model.dart';
 import 'package:glamify/common/model/token_response_model.dart';
+import 'package:glamify/mypage/model/agreement_request_model.dart';
 import 'package:glamify/user/model/update_nickname_request_model.dart';
 import 'package:retrofit/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -59,6 +60,12 @@ abstract class UserRepository{
     'accessToken': 'true',
   })
   Future<ResponseDto<EmptyDto>> logout(@Body() EmptyDto request);
+
+  @POST('/user/update_push_notification_agreement')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<ResponseDto<EmptyDto>> updateNotificationAgreement(@Body() AgreementRequest request);
 }
 
 

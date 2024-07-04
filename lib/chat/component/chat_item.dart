@@ -87,7 +87,7 @@ class ChatItem extends StatelessWidget {
                     )
                   ],
                 ),
-                count == 0 ? const SizedBox.shrink() : Container(
+                count <= 0 ? const SizedBox.shrink() : Container(
                   height: 30.w,
                   width: 30.w,
                   margin: EdgeInsets.only(right: 10.w),

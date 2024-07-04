@@ -7,7 +7,7 @@ part of 'home_matching_button_view_model.dart';
 // **************************************************************************
 
 String _$homeMatchingButtonViewModelHash() =>
-    r'69ae031696e63a5bc168af5e596133a4a336136f';
+    r'827ad09b277e464a6d53520adf3674693c4b9401';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,7 +30,8 @@ class _SystemHash {
   }
 }
 
-abstract class _$HomeMatchingButtonViewModel extends BuildlessNotifier<bool> {
+abstract class _$HomeMatchingButtonViewModel
+    extends BuildlessAutoDisposeNotifier<bool> {
   late final List<AnimationController> controllers;
   late final List<Animation<double>> animations;
 
@@ -87,7 +88,7 @@ class HomeMatchingButtonViewModelFamily extends Family<bool> {
 
 /// See also [HomeMatchingButtonViewModel].
 class HomeMatchingButtonViewModelProvider
-    extends NotifierProviderImpl<HomeMatchingButtonViewModel, bool> {
+    extends AutoDisposeNotifierProviderImpl<HomeMatchingButtonViewModel, bool> {
   /// See also [HomeMatchingButtonViewModel].
   HomeMatchingButtonViewModelProvider(
     List<AnimationController> controllers,
@@ -153,7 +154,8 @@ class HomeMatchingButtonViewModelProvider
   }
 
   @override
-  NotifierProviderElement<HomeMatchingButtonViewModel, bool> createElement() {
+  AutoDisposeNotifierProviderElement<HomeMatchingButtonViewModel, bool>
+      createElement() {
     return _HomeMatchingButtonViewModelProviderElement(this);
   }
 
@@ -174,7 +176,7 @@ class HomeMatchingButtonViewModelProvider
   }
 }
 
-mixin HomeMatchingButtonViewModelRef on NotifierProviderRef<bool> {
+mixin HomeMatchingButtonViewModelRef on AutoDisposeNotifierProviderRef<bool> {
   /// The parameter `controllers` of this provider.
   List<AnimationController> get controllers;
 
@@ -183,8 +185,8 @@ mixin HomeMatchingButtonViewModelRef on NotifierProviderRef<bool> {
 }
 
 class _HomeMatchingButtonViewModelProviderElement
-    extends NotifierProviderElement<HomeMatchingButtonViewModel, bool>
-    with HomeMatchingButtonViewModelRef {
+    extends AutoDisposeNotifierProviderElement<HomeMatchingButtonViewModel,
+        bool> with HomeMatchingButtonViewModelRef {
   _HomeMatchingButtonViewModelProviderElement(super.provider);
 
   @override

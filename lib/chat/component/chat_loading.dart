@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glamify/common/layout/default_layout.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../common/component/alert_message.dart';
 import '../../common/const/colors.dart';
 import '../../common/const/typography.dart';
+import '../../home/view_model/home_random_chat_view_model.dart';
 import '../model/chat_room_response_model.dart';
+import '../view_model/chat_detail_view_model.dart';
 import 'chat_bottom_bar.dart';
 
-class ChatLoading extends StatefulWidget {
+class ChatLoading extends ConsumerStatefulWidget {
+  final int chatRoomId;
   const ChatLoading({
+    required this.chatRoomId,
     super.key,
   });
 
   @override
-  State<ChatLoading> createState() => _ChatLoadingState();
+  ConsumerState<ChatLoading> createState() => _ChatLoadingState();
 }
 
-class _ChatLoadingState extends State<ChatLoading> {
+class _ChatLoadingState extends ConsumerState<ChatLoading> {
   late TextEditingController controller;
 
   @override
@@ -44,7 +50,42 @@ class _ChatLoadingState extends State<ChatLoading> {
       },
       action: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            showMenu(
+              context: context,
+              position: RelativeRect.fromSize(
+                  Rect.fromLTRB(390.w, 100.h, 0, 0), Size(390.w, 844.w)),
+              color: Colors.white,
+              items: [
+                PopupMenuItem<int>(
+                    onTap: () async {
+                      final bool confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const AlarmMessage(
+                            title: '나가기',
+                            content: '채팅방을 나가시겠습니까?',
+                          );
+                        },
+                      ) ??
+                          false;
+                      if (confirm) {
+                        ref.read(chatDetailProvider.notifier)
+                            .leaveChatRoom(widget.chatRoomId);
+                        ref.read(homeRandomChatViewModelProvider.notifier).getRandomChatInfo();
+                        context.pop();
+                      }
+                    },
+                    value: 1,
+                    child: const Text('나가기')),
+                PopupMenuItem<int>(
+                  onTap: () {},
+                  value: 3,
+                  child: const Text('신고하기'),
+                ),
+              ],
+            );
+          },
           icon: Icon(
             Icons.more_vert,
             size: 25.w,

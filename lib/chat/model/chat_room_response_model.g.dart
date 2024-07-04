@@ -13,7 +13,7 @@ ChatRoomResponse _$ChatRoomResponseFromJson(Map<String, dynamic> json) =>
       registerDate: DateTime.parse(json['register_date'] as String),
       updateDate: DateTime.parse(json['update_date'] as String),
       randomYN: json['random_YN'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       lastMessage: json['last_message'] as String,
       messageCount: (json['message_count'] as num).toInt(),
     );

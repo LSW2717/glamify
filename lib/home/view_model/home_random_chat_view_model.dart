@@ -27,6 +27,9 @@ class HomeRandomChatViewModel extends _$HomeRandomChatViewModel {
     }
     print(state);
   }
+  void refreshRandomChat(){
+    state = const LoadingHomeChatState();
+  }
 }
 
 abstract class HomeChatState {

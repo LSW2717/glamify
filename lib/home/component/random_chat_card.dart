@@ -56,7 +56,7 @@ class RandomChatCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 30.w),
-                Text(roomData.name, style: headerText1.copyWith(fontWeight: FontWeight.w700),),
+                Text(roomData.name ?? '알수없음', style: headerText1.copyWith(fontWeight: FontWeight.w700),),
                 SizedBox(height: 28.w),
                 Text('매칭이 됐어요!\n클릭해서 대화를 진행해보세요!',style: headerText4,textAlign: TextAlign.center,)
               ],

@@ -4,14 +4,12 @@ import 'package:glamify/common/model/empty_dto_model.dart';
 import 'package:glamify/common/model/response_dto.dart';
 import 'package:glamify/common/model/token_response_model.dart';
 import 'package:glamify/common/repository/test_repository.dart';
-import 'package:glamify/common/websocket/websocket.dart';
 import 'package:glamify/user/model/fcm_token_request_model.dart';
 import 'package:glamify/user/model/update_nickname_request_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../chat/repository/chat_repository.dart';
 import '../../common/data_source/data.dart';
-import '../../common/model/dummy.dart';
 import '../../common/secure_storage/secure_storage.dart';
 import '../model/user_model.dart';
 import '../repository/user_repository.dart';

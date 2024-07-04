@@ -20,7 +20,7 @@ class DefaultLayout extends StatelessWidget {
   final VoidCallback backAction;
 
   const DefaultLayout({
-    this.backgroundColor,
+    this.backgroundColor = Colors.white,
     required this.child,
     this.title,
     this.bottomNavigationBar,

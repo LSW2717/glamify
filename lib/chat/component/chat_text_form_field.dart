@@ -22,13 +22,12 @@ class ChatTextFormField extends StatefulWidget {
 
 class _ChatTextFormFieldState extends State<ChatTextFormField> {
   late FocusNode focusNode;
-  double borderRadius = 100.0;
+  double borderRadius = 15.0;
 
   @override
   void initState() {
     super.initState();
     focusNode = FocusNode();
-    widget.controller.addListener(_handleTextChange);
   }
 
   @override
@@ -37,18 +36,6 @@ class _ChatTextFormFieldState extends State<ChatTextFormField> {
     super.dispose();
   }
 
-  void _handleTextChange() {
-    final text = widget.controller.text;
-    final lines = text.split('\n').length;
-
-    setState(() {
-      if (lines > 1) {
-        borderRadius = 15.0;
-      } else {
-        borderRadius = 100.0;
-      }
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return TextFormField(

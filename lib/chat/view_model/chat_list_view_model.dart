@@ -25,7 +25,7 @@ class ChatListViewModel extends StateNotifier<ChatListState> {
 
   Future<void> getChatList() async {
     final userState = ref.read(userViewModelProvider);
-    if(userState is LoadedUserState){
+    if (userState is LoadedUserState) {
       state = const LoadingChatListState();
       try {
         final response = await repository.getChatRoomList(EmptyDto());
@@ -41,7 +41,7 @@ class ChatListViewModel extends StateNotifier<ChatListState> {
 
   Future<void> updateChatList() async {
     final userState = ref.read(userViewModelProvider);
-    if(userState is LoadedUserState){
+    if (userState is LoadedUserState) {
       try {
         final response = await repository.getChatRoomList(EmptyDto());
         print(state);
@@ -51,6 +51,55 @@ class ChatListViewModel extends StateNotifier<ChatListState> {
         print(state);
         print(e.toString());
       }
+    }
+  }
+
+  void updateChatListMessage(int chatRoomId, String message) {
+    if (state is LoadedChatListState) {
+      final currentState = state as LoadedChatListState;
+      final updatedChatRoomList =
+          currentState.response.chatRoomList.map((chatRoom) {
+        if (chatRoom.chatRoomId == chatRoomId) {
+          return ChatRoomResponse(
+            chatRoomId: chatRoom.chatRoomId,
+            ownerUserId: chatRoom.ownerUserId,
+            name: chatRoom.name,
+            lastMessage: message,
+            messageCount: chatRoom.messageCount + 1,
+            registerDate: chatRoom.registerDate,
+            updateDate: DateTime.now(),
+            randomYN: chatRoom.randomYN,
+          );
+        }
+        return chatRoom;
+      }).toList();
+
+      state = LoadedChatListState(ChatRoomListResponse(
+        chatRoomList: updatedChatRoomList,
+        readCountList: currentState.response.readCountList,
+      ));
+    }
+  }
+
+  void updateChatReadCount(int chatRoomId, int messageReadCount) {
+    print('호출됨');
+    if (state is LoadedChatListState) {
+      final currentState = state as LoadedChatListState;
+      final updatedReadCountList =
+          currentState.response.readCountList.map((readCount) {
+        if (readCount.chatRoomId == chatRoomId) {
+          print('현재리드카운트: ${readCount.messageReadCount}');
+          print('받아온리드카운트: $messageReadCount');
+          return ReadCountList(
+              chatRoomId: chatRoomId, messageReadCount: messageReadCount);
+        }
+        return readCount;
+      }).toList();
+      print('이거이거 호출됨$state');
+      state = LoadedChatListState(ChatRoomListResponse(
+        chatRoomList: currentState.response.chatRoomList,
+        readCountList: updatedReadCountList,
+      ));
     }
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glamify/chat/view_model/chat_list_view_model.dart';
+import 'package:glamify/common/firebase_setting/firebase_handler.dart';
 import 'package:glamify/common/firebase_setting/notification_setting.dart';
 import 'package:glamify/common/websocket/websocket.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -13,6 +14,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'common/firebase_setting/firebase_options.dart';
 import 'common/router/router.dart';
 import 'home/view_model/home_random_chat_view_model.dart';
+import 'home/view_model/toggle_button_view_model.dart';
 
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
@@ -47,6 +49,7 @@ class _AppState extends ConsumerState<App> {
   void initState() {
     super.initState();
     ref.read(websocketProvider).connect();
+    ref.read(fcmProvider).removeBadge();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       await showFlutterNotification(message);
       ref.read(homeRandomChatViewModelProvider.notifier).getRandomChatInfo();

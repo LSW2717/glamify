@@ -6,18 +6,11 @@ part 'tab_index_view_model.g.dart';
 @Riverpod(keepAlive: true)
 class TabIndexViewModel extends _$TabIndexViewModel {
   @override
-  int build(ScrollController controller) {
+  int build() {
     return 0;
   }
 
   void setIndex(int newIndex) {
-    if (state == 0 && newIndex == 0) {
-      controller.animateTo(
-        0,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOut,
-      );
-    }
     state = newIndex;
   }
 }

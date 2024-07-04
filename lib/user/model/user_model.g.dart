@@ -24,6 +24,9 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       phoneNumber: json['phone_number'] as String?,
       refreshToken: json['refresh_token'] as String,
       pushNotificationToken: json['push_notification_token'] as String,
+      pushNotificationAgreement:
+          json['push_notification_agreement_YN'] as String,
+      permissionType: json['permission_type'] as String,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -34,4 +37,6 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'phone_number': instance.phoneNumber,
       'refresh_token': instance.refreshToken,
       'push_notification_token': instance.pushNotificationToken,
+      'push_notification_agreement_YN': instance.pushNotificationAgreement,
+      'permission_type': instance.permissionType,
     };

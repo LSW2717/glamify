@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glamify/chat/component/chat_item.dart';
 import 'package:glamify/chat/view/chat_empty_view.dart';
+import 'package:glamify/chat/view/chat_invite_view.dart';
 import 'package:glamify/chat/view_model/chat_detail_view_model.dart';
 import 'package:glamify/chat/view_model/chat_list_view_model.dart';
 import 'package:glamify/chat/view_model/chat_message_view_model.dart';
-import 'package:glamify/chat/view_model/chat_room_id_view_model.dart';
 import 'package:glamify/common/const/colors.dart';
 import 'package:glamify/common/const/typography.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
@@ -37,45 +38,88 @@ class ChatView extends ConsumerWidget {
         ),
       );
     }
-    if (chatListState is ErrorChatListState) {
-      return Center(
-        child: Text(chatListState.errorMessage),
-      );
-    }
     if (chatListState is LoadedChatListState) {
       final chatList = chatListState.response.chatRoomList;
       final chatReadCount = chatListState.response.readCountList;
-      return chatList.isEmpty
-          ? const ChatEmptyView()
-          : CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      ...chatList.asMap().map((index, data) {
-                        return MapEntry(
-                          index,
-                          ChatItem(
-                            user: User(id: data.ownerUserId.toString()),
-                            name: data.name,
-                            lastMessage: data.lastMessage,
-                            onTap: () {
-                              ref.read(chatMessageProvider.notifier).getMessageList(data.chatRoomId);
-                              ref.read(chatDetailProvider.notifier).getMessageInfo(data.chatRoomId);
-                              ref.read(chatRoomIdViewModelProvider.notifier).setRoomId(data.chatRoomId);
-                              context.push('/chatDetail', extra: data.chatRoomId);
-                              print(data.chatRoomId);
-                            },
-                            count: data.messageCount - chatReadCount[index].messageReadCount, // 여기서 index 사용
-                          ),
-                        );
-                      }).values.toList(),
-                    ],
+      return DefaultTabController(
+            length: 2,
+            child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Colors.white,
+                    toolbarHeight: 0.w,
+                    elevation: 0,
+                    scrolledUnderElevation: 0,
+                    pinned: true,
+                    bottom: TabBar(
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorColor: Colors.black,
+                      indicatorWeight: 1.w,
+                      labelStyle: headerText4,
+                      labelColor: Colors.black,
+                      unselectedLabelColor: gray600,
+                      tabs: [
+                        Tab(
+                          text: '채팅목록',
+                          height: 48.w,
+                        ),
+                        Tab(
+                          text: '초대목록',
+                          height: 48.w,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
+                  SliverFillRemaining(
+                    child: TabBarView(
+                      children: [
+                        chatList.isEmpty
+                            ? const ChatEmptyView() : Column(
+                          children: [
+                            SizedBox(height: 10.w),
+                            ...chatList
+                                .asMap()
+                                .map((index, data) {
+                              return MapEntry(
+                                index,
+                                ChatItem(
+                                  user: User(id: data.ownerUserId.toString()),
+                                  name: data.name ?? '알수없음',
+                                  lastMessage: data.lastMessage,
+                                  onTap: () {
+                                    ref
+                                        .read(chatMessageViewModelProvider(
+                                        data.chatRoomId)
+                                        .notifier)
+                                        .getMessageList();
+                                    ref
+                                        .read(chatDetailProvider.notifier)
+                                        .getMessageInfo(data.chatRoomId);
+                                    ref
+                                        .read(chatDetailProvider.notifier)
+                                        .updateMessageReadCount(data.chatRoomId);
+                                    context.push('/chatDetail',
+                                        extra: data.chatRoomId);
+                                    print(data.chatRoomId);
+                                  },
+                                  count: data.messageCount -
+                                      chatReadCount[index].messageReadCount,
+                                ),
+                              );
+                            })
+                                .values
+                                .toList(),
+                          ],
+                        ),
+                        const ChatInviteView(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+          );
     } else {
       return const Center(
         child: CircularProgressIndicator(

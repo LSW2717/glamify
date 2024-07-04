@@ -32,8 +32,12 @@ class WebSocketManager {
     _channel = WebSocketChannel.connect(Uri.parse('$socketUrl/$token'));
     print('$socketUrl/$token');
     _channel!.stream.listen((message) {
+      print(message);
       final Map<String, dynamic> decodedMessage = json.decode(message);
-      final chatMessage = ChatMessageResponse.fromJson(decodedMessage);
+      final chatMessage = ChatMessageResponse<MessageData>.fromJson(
+        decodedMessage,
+            (json) => MessageData.fromJson(json as Map<String, dynamic>),
+      );
       final textMessage = types.TextMessage(
         author: types.User(id: chatMessage.data.senderId.toString()),
         createdAt: DateTime.now().millisecondsSinceEpoch,

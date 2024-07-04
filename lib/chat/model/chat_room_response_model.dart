@@ -21,7 +21,7 @@ class ChatRoomResponse {
   @JsonKey(name: 'random_YN')
   final String randomYN;
 
-  final String name;
+  final String? name;
 
   @JsonKey(name: 'last_message')
   final String lastMessage;
@@ -35,7 +35,7 @@ class ChatRoomResponse {
     required this.registerDate,
     required this.updateDate,
     required this.randomYN,
-    required this.name,
+    this.name,
     required this.lastMessage,
     required this.messageCount,
   });

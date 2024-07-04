@@ -20,8 +20,7 @@ class RootTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useScrollController();
-    final currentIndex = ref.watch(tabIndexViewModelProvider(controller));
+    final currentIndex = ref.watch(tabIndexViewModelProvider);
 
     return DefaultLayout(
       title: _getTitleFromTabIndex(currentIndex),
@@ -40,8 +39,9 @@ class RootTab extends HookConsumerWidget {
         unselectedFontSize: 12.sp,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          ref.read(tabIndexViewModelProvider(controller).notifier).setIndex(index);
+          ref.read(tabIndexViewModelProvider.notifier).setIndex(index);
           if(index == 2){
+            ref.read(chatInviteListProvider.notifier).getChatInviteList();
             ref.read(chatListProvider.notifier).updateChatList();
           }
           if(index == 0){
@@ -109,8 +109,6 @@ class RootTab extends HookConsumerWidget {
           child: IconButton(
             icon: const Icon(Icons.notifications, color: Colors.black),
             onPressed: (){
-              ref.read(chatInviteListProvider.notifier).getChatInviteList();
-              context.push('/invite');
             },
             splashRadius: 24.w, // 필요에 따라 조정
           ),

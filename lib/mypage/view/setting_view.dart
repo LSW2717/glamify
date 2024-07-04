@@ -28,10 +28,12 @@ class SettingView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          GestureDetector(
-            onTap: () {},
+          InkWell(
+            onTap: (){
+              context.go('/setting/notisetting');
+            },
             child: Container(
-              width: 375.w,
+              width: 390.w,
               height: 64.w,
               color: Colors.transparent,
               padding: EdgeInsets.only(
@@ -52,7 +54,7 @@ class SettingView extends ConsumerWidget {
               ),
             ),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () async {
               const url = '';
               if (await canLaunchUrlString(url)) {
@@ -62,7 +64,7 @@ class SettingView extends ConsumerWidget {
               }
             },
             child: Container(
-              width: 375.w,
+              width: 390.w,
               height: 64.w,
               color: Colors.transparent,
               padding: EdgeInsets.only(
@@ -84,7 +86,7 @@ class SettingView extends ConsumerWidget {
             ),
           ),
           Container(
-            width: 375.w,
+            width: 390.w,
             height: 64.w,
             padding: EdgeInsets.all(20.w),
             child: Row(
@@ -119,17 +121,17 @@ class SettingView extends ConsumerWidget {
               ],
             ),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () async {
               final bool confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlarmMessage(
-                        title: '로그아웃',
-                        content: '로그아웃 하시겠습니까?',
-                      );
-                    },
-                  ) ??
+                context: context,
+                builder: (BuildContext context) {
+                  return const AlarmMessage(
+                    title: '로그아웃',
+                    content: '로그아웃 하시겠습니까?',
+                  );
+                },
+              ) ??
                   false;
               if (confirm) {
                 ref.read(authProvider.notifier).logout();
@@ -137,7 +139,7 @@ class SettingView extends ConsumerWidget {
               }
             },
             child: Container(
-              width: 375.w,
+              width: 390.w,
               height: 64.w,
               color: Colors.transparent,
               padding: EdgeInsets.only(

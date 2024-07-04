@@ -1,10 +1,7 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:glamify/chat/component/chat_item.dart';
 import 'package:glamify/common/const/typography.dart';
 import 'package:glamify/common/firebase_setting/firebase_handler.dart';
 import 'package:glamify/home/component/random_chat_card.dart';
@@ -15,7 +12,6 @@ import 'package:go_router/go_router.dart';
 import '../../chat/view_model/chat_detail_view_model.dart';
 import '../../chat/view_model/chat_message_view_model.dart';
 import '../../common/const/colors.dart';
-import '../../common/firebase_setting/notification_setting.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -59,20 +55,12 @@ class _HomeViewState extends ConsumerState<HomeView>
     final homeChatState = ref.watch(homeRandomChatViewModelProvider);
     final matchingButton = ref
         .watch(homeMatchingButtonViewModelProvider(_controllers, _animations));
-    if (matchingButton) {
-      ref.read(homeMatchingButtonViewModelProvider(_controllers, _animations)
-              .notifier)
-          .startAnimations();
-    } else {
-      ref.read(homeMatchingButtonViewModelProvider(_controllers, _animations)
-              .notifier)
-          .stopAnimations();
-    }
     ref.watch(fcmProvider);
+    ref.watch(chatMessageViewModelProvider(0));
     if (homeChatState is LoadedHomeChatState) {
       final chatData = homeChatState.response;
       return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
@@ -86,9 +74,9 @@ class _HomeViewState extends ConsumerState<HomeView>
           RandomChatCard(
             roomData: chatData,
             onTap: () {
-              ref.read(chatMessageProvider.notifier)
-                  .getMessageList(chatData.chatRoomId);
-              ref.read(chatDetailProvider.notifier)
+              ref.read(chatDetailProvider.notifier).updateMessageReadCount(chatData.chatRoomId);
+              ref
+                  .read(chatDetailProvider.notifier)
                   .getMessageInfo(chatData.chatRoomId);
               context.push('/chatDetail2', extra: chatData.chatRoomId);
             },
@@ -148,24 +136,10 @@ class _HomeViewState extends ConsumerState<HomeView>
           Center(
             child: ElevatedButton(
               onPressed: () {
-                ref
-                    .read(homeMatchingButtonViewModelProvider(
+                ref.read(homeMatchingButtonViewModelProvider(
                             _controllers, _animations)
                         .notifier)
                     .toggleButton();
-                if (!matchingButton) {
-                  ref
-                      .read(homeMatchingButtonViewModelProvider(
-                              _controllers, _animations)
-                          .notifier)
-                      .requestMatching();
-                } else {
-                  ref
-                      .read(homeMatchingButtonViewModelProvider(
-                              _controllers, _animations)
-                          .notifier)
-                      .quitMatching();
-                }
               },
               style: ElevatedButton.styleFrom(shape: const CircleBorder()),
               child: Container(
