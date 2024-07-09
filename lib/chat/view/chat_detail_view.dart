@@ -19,6 +19,7 @@ import '../../common/const/colors.dart';
 import '../../common/const/typography.dart';
 import '../../common/layout/default_layout.dart';
 import '../component/chat_bottom_bar.dart';
+import '../model/chat_room_response_model.dart';
 
 class ChatDetailView extends ConsumerStatefulWidget {
   final int chatRoomId;
@@ -69,13 +70,14 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final chatState = ref.watch(chatDetailProvider);
+    final chatState = ref.watch(chatDetailViewModelProvider(widget.chatRoomId));
     final userState = ref.watch(userViewModelProvider);
     if (chatState is LoadingChatState) {
       return ChatLoading(chatRoomId: widget.chatRoomId);
     }
     if (chatState is LoadedChatState && userState is LoadedUserState) {
-      final messages = ref.watch(chatMessageViewModelProvider(widget.chatRoomId));
+      final messages =
+          ref.watch(chatMessageViewModelProvider(widget.chatRoomId));
       final chatData = chatState.infoResponse;
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -100,7 +102,10 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
             key: _chatKey,
             onSendPressed: (text) {
               if (text.text.isNotEmpty && mounted) {
-                ref.read(chatMessageViewModelProvider(widget.chatRoomId).notifier).sendMessage(
+                ref
+                    .read(chatMessageViewModelProvider(widget.chatRoomId)
+                        .notifier)
+                    .sendMessage(
                       text.text,
                     );
               }
@@ -121,18 +126,56 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
               ),
             ),
             nameBuilder: (user) {
-              final userName = chatData.chatRoomUsers.firstWhere((u) => u.userId == int.parse(user.id)).nickname;
+              final ChatRoomUserResponse emptyUser = ChatRoomUserResponse(
+                userId: -1,
+                nickname: '알수 없음',
+                image: '',
+                messageReadCount: 0,
+                updateDate: DateTime.fromMillisecondsSinceEpoch(0),
+              );
+              if (chatData.chatRoomUsers.isEmpty) {
+                return const Text(
+                  '알수 없음',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                );
+              }
+              final foundUser = chatData.chatRoomUsers.firstWhere(
+                (u) => u.userId == int.parse(user.id),
+                orElse: () => emptyUser,
+              );
+              final userName = foundUser.nickname.isNotEmpty? foundUser.nickname : '알수 없음';
               return Text(
                 userName,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               );
             },
             avatarBuilder: (user) {
-              final userImage = chatData.chatRoomUsers.firstWhere((u) => u.userId == int.parse(user.id)).image;
+              final ChatRoomUserResponse emptyUser = ChatRoomUserResponse(
+                userId: -1,
+                nickname: '알수 없음',
+                image: '',
+                messageReadCount: 0,
+                updateDate: DateTime.fromMillisecondsSinceEpoch(0),
+              );
+              if (chatData.chatRoomUsers.isEmpty) {
+                return Container(
+                  margin: EdgeInsets.only(right: 5.w),
+                  child: const CircleAvatar(
+                    backgroundImage: null,
+                    radius: 17,
+                  ),
+                );
+              }
+              final foundUser = chatData.chatRoomUsers.firstWhere(
+                (u) => u.userId == int.parse(user.id),
+                orElse: () => emptyUser,
+              );
+              final userImage = foundUser.image.isNotEmpty ? foundUser.nickname : '';
               return Container(
-                margin: EdgeInsets.all(2),
+                margin: EdgeInsets.only(right: 5.w),
                 child: CircleAvatar(
-                  backgroundImage: userImage == "" ? null : NetworkImage(userImage),
+                  backgroundImage:
+                      userImage.isEmpty ? null : NetworkImage(userImage),
                   radius: 17,
                 ),
               );
@@ -143,7 +186,10 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
               controller: textController,
               sendPressed: (text) {
                 if (text.isNotEmpty && mounted) {
-                  ref.read(chatMessageViewModelProvider(widget.chatRoomId).notifier).sendMessage(
+                  ref
+                      .read(chatMessageViewModelProvider(widget.chatRoomId)
+                          .notifier)
+                      .sendMessage(
                         text,
                       );
                 }
@@ -151,9 +197,13 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
             ),
             customStatusBuilder: (message, {required BuildContext context}) {
               final int totalUsers = chatData.chatRoomUsers.length;
-              final int readMembersCount = (message.metadata?['readMember'] as List?)?.length ?? totalUsers - 1;
+              final int readMembersCount =
+                  (message.metadata?['readMember'] as List?)?.length ??
+                      totalUsers - 1;
               final int unreadMembersCount = totalUsers - readMembersCount;
-              return unreadMembersCount <= 0 ? const Text('') : Text('$unreadMembersCount', style: bodyText1);
+              return unreadMembersCount <= 0
+                  ? const Text('')
+                  : Text('$unreadMembersCount', style: bodyText1);
             },
             theme: DefaultChatTheme(
               messageBorderRadius: 10,
@@ -164,6 +214,7 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
               dateDividerTextStyle: bodyText1.copyWith(color: base5),
               bubbleMargin:
                   EdgeInsets.symmetric(vertical: 1.w, horizontal: 14.w),
+              userAvatarNameColors: [main1, main2],
             ),
           ),
         ),

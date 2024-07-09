@@ -74,10 +74,6 @@ class _HomeViewState extends ConsumerState<HomeView>
           RandomChatCard(
             roomData: chatData,
             onTap: () {
-              ref.read(chatDetailProvider.notifier).updateMessageReadCount(chatData.chatRoomId);
-              ref
-                  .read(chatDetailProvider.notifier)
-                  .getMessageInfo(chatData.chatRoomId);
               context.push('/chatDetail2', extra: chatData.chatRoomId);
             },
           ),

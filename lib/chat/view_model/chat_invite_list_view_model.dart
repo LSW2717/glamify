@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glamify/common/model/empty_dto_model.dart';
 
+import '../model/chat_room_request_model.dart';
 import '../model/chat_room_response_model.dart';
 import '../repository/chat_repository.dart';
 
@@ -28,6 +29,31 @@ class ChatInviteListViewModel extends StateNotifier<InviteState> {
       print(response.message);
     }
   }
+
+  Future<void> inviteChat(InviteChatRequest request) async{
+    try {
+      await repository.inviteChat(request);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  Future<void> confirmInviteChat(InvitationRequest request) async{
+    try {
+      await repository.confirmChatInvitation(request);
+    } catch (e) {
+      print(e.toString());
+    }
+
+  }
+  Future<void> rejectInviteChat(InvitationRequest request) async{
+    try {
+      await repository.rejectChatInvitation(request);
+    } catch (e) {
+      print(e.toString());
+    }
+
+  }
+
 }
 
 abstract class InviteState {

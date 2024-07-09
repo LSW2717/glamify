@@ -16,11 +16,11 @@ class AuthViewModel extends ChangeNotifier {
   AuthViewModel({
     required this.ref,
   }) {
-    // ref.listen<UserState?>(userViewModelProvider, (previous, next) {
-    //   if (previous != next) {
-    //     notifyListeners();
-    //   }
-    // });
+    ref.listen<UserState?>(userViewModelProvider, (previous, next) {
+      if (previous != next) {
+        notifyListeners();
+      }
+    });
   }
   void logout() {
     ref.read(userViewModelProvider.notifier).logout();

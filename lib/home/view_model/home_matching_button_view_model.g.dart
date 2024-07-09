@@ -7,7 +7,7 @@ part of 'home_matching_button_view_model.dart';
 // **************************************************************************
 
 String _$homeMatchingButtonViewModelHash() =>
-    r'827ad09b277e464a6d53520adf3674693c4b9401';
+    r'60ac6b12d56d860d08e5d3cc60779187d3dd344f';
 
 /// Copied from Dart SDK
 class _SystemHash {

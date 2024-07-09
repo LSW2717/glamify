@@ -17,7 +17,7 @@ import '../global_variable/global_variable.dart';
 import '../view/root_tab.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final provider =  ref.read(authProvider);
+  final provider =  ref.watch(authProvider);
   Page<dynamic> platformPage(Widget child, String key) {
     return Platform.isIOS
         ? CupertinoPage<void>(key: ValueKey(key), child: child)
@@ -46,7 +46,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
             onExit: (context) {
               ref.read(chatListProvider.notifier).updateChatList();
-              ref.refresh(chatMessageViewModelProvider(0));
               return true;
             },
           ),
@@ -59,7 +58,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
             onExit: (context) {
               ref.read(chatListProvider.notifier).updateChatList();
-              ref.refresh(chatMessageViewModelProvider(0));
               return true;
             },
           ),

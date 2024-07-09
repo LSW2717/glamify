@@ -7,7 +7,7 @@ part of 'home_random_chat_view_model.dart';
 // **************************************************************************
 
 String _$homeRandomChatViewModelHash() =>
-    r'1196730305f0b9eb69f12a292d21ea572d18762e';
+    r'6faa5110980ada06c8dce0deaf5994f56273b4e8';
 
 /// See also [HomeRandomChatViewModel].
 @ProviderFor(HomeRandomChatViewModel)

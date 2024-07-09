@@ -69,9 +69,9 @@ Future<String?> getToken(FirebaseMessaging instance) async {
 
 Future<void> getPermission(FirebaseMessaging instance) async {
   await instance.setForegroundNotificationPresentationOptions(
-    alert: false,
-    badge: false,
-    sound: false,
+    alert: true,
+    badge: true,
+    sound: true,
   );
   await instance.requestPermission(
     alert: true,

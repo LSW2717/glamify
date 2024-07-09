@@ -89,17 +89,6 @@ class ChatView extends ConsumerWidget {
                                   name: data.name ?? '알수없음',
                                   lastMessage: data.lastMessage,
                                   onTap: () {
-                                    ref
-                                        .read(chatMessageViewModelProvider(
-                                        data.chatRoomId)
-                                        .notifier)
-                                        .getMessageList();
-                                    ref
-                                        .read(chatDetailProvider.notifier)
-                                        .getMessageInfo(data.chatRoomId);
-                                    ref
-                                        .read(chatDetailProvider.notifier)
-                                        .updateMessageReadCount(data.chatRoomId);
                                     context.push('/chatDetail',
                                         extra: data.chatRoomId);
                                     print(data.chatRoomId);

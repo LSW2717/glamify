@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glamify/chat/view_model/chat_invite_list_view_model.dart';
 import 'package:glamify/home/view_model/home_matching_button_view_model.dart';
 import 'package:glamify/home/view_model/toggle_button_view_model.dart';
 import 'package:glamify/user/model/user_model.dart';
@@ -48,8 +49,8 @@ class ChatActionButton extends ConsumerWidget {
                       false;
                   if (confirm) {
                     ref.read(homeRandomChatViewModelProvider.notifier).refreshRandomChat();
-                    ref.read(chatDetailProvider.notifier)
-                        .leaveChatRoom(chatRoom.chatRoomId);
+                    ref.read(chatDetailViewModelProvider(chatRoom.chatRoomId).notifier)
+                        .leaveChatRoom();
                     context.pop();
                   }
                 },
@@ -71,15 +72,17 @@ class ChatActionButton extends ConsumerWidget {
                   if (confirm) {
                     if(userState is LoadedUserState){
                       final myUserId = userState.user.userId;
-                      final targetUser = chatInfo.chatRoomUsers.firstWhere(
-                            (user) => user.userId != myUserId,
-                        orElse: () => throw Exception('No other user found'),
-                      );
-                      final InviteChatRequest request = InviteChatRequest(
-                        targetId: targetUser.userId,
-                        message: '안녕하세용',
-                      );
-                      ref.read(chatDetailProvider.notifier).inviteChat(request);
+                      if(chatInfo.chatRoomUsers!.isNotEmpty){
+                        final targetUser = chatInfo.chatRoomUsers!.firstWhere(
+                              (user) => user.userId != myUserId,
+                          orElse: () => throw Exception('No other user found'),
+                        );
+                        final InviteChatRequest request = InviteChatRequest(
+                          targetId: targetUser.userId,
+                          message: '안녕하세용',
+                        );
+                        ref.read(chatInviteListProvider.notifier).inviteChat(request);
+                      }
                     }
                   }
                 },

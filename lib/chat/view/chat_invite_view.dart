@@ -97,7 +97,7 @@ class ChatInviteView extends ConsumerWidget {
                                             chatInvitationId:
                                                 data.chatInvitationId);
                                     ref
-                                        .read(chatDetailProvider.notifier)
+                                        .read(chatInviteListProvider.notifier)
                                         .confirmInviteChat(request);
                                     ref
                                         .read(chatInviteListProvider.notifier)
@@ -136,7 +136,7 @@ class ChatInviteView extends ConsumerWidget {
                                               chatInvitationId:
                                                   data.chatInvitationId);
                                       ref
-                                          .read(chatDetailProvider.notifier)
+                                          .read(chatInviteListProvider.notifier)
                                           .rejectInviteChat(request);
                                       ref
                                           .read(

@@ -2,23 +2,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glamify/chat/model/chat_room_request_model.dart';
 import 'package:glamify/chat/model/chat_room_response_model.dart';
 import 'package:glamify/chat/repository/chat_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final chatDetailProvider =
-    StateNotifierProvider<ChatDetailViewModel, ChattingState>((ref) {
-  final repository = ref.watch(chatRepositoryProvider);
-  return ChatDetailViewModel(repository, ref);
-});
+part 'chat_detail_view_model.g.dart';
 
-class ChatDetailViewModel extends StateNotifier<ChattingState> {
-  final ChatRepository repository;
-  final Ref ref;
+@riverpod
+class ChatDetailViewModel extends _$ChatDetailViewModel {
 
-  ChatDetailViewModel(
-    this.repository,
-    this.ref,
-  ) : super(const LoadingChatState());
+  ChatRepository get repository => ref.watch(chatRepositoryProvider);
 
-  Future<void> getMessageInfo(int id) async {
+  @override
+  ChattingState build(int id) {
+    getMessageInfo();
+    updateMessageReadCount();
+    return const LoadingChatState();
+  }
+
+  Future<void> getMessageInfo() async {
     state = const LoadingChatState();
     try {
       final infoRequest = ChatRoomRequest(chatRoomId: id);
@@ -32,7 +32,7 @@ class ChatDetailViewModel extends StateNotifier<ChattingState> {
     }
   }
 
-  Future<void> leaveChatRoom(int id) async {
+  Future<void> leaveChatRoom() async {
     try {
       final request = ChatRoomRequest(chatRoomId: id);
       await repository.leaveChatRoom(request);
@@ -41,7 +41,7 @@ class ChatDetailViewModel extends StateNotifier<ChattingState> {
     }
   }
 
-  Future<void> updateMessageReadCount(int id) async{
+  Future<void> updateMessageReadCount() async{
     try {
       final request = ChatRoomRequest(chatRoomId: id);
       await repository.updateMessageReadCount(request);
@@ -49,30 +49,6 @@ class ChatDetailViewModel extends StateNotifier<ChattingState> {
       print(e.toString());
     }
   }
-  Future<void> inviteChat(InviteChatRequest request) async{
-    try {
-      await repository.inviteChat(request);
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-  Future<void> confirmInviteChat(InvitationRequest request) async{
-    try {
-      await repository.confirmChatInvitation(request);
-    } catch (e) {
-      print(e.toString());
-    }
-
-  }
-  Future<void> rejectInviteChat(InvitationRequest request) async{
-    try {
-      await repository.rejectChatInvitation(request);
-    } catch (e) {
-      print(e.toString());
-    }
-
-  }
-
 }
 
 abstract class ChattingState {

@@ -10,7 +10,6 @@ import '../../common/component/alert_message.dart';
 import '../../common/const/colors.dart';
 import '../../common/const/typography.dart';
 import '../../home/view_model/home_random_chat_view_model.dart';
-import '../model/chat_room_response_model.dart';
 import '../view_model/chat_detail_view_model.dart';
 import 'chat_bottom_bar.dart';
 
@@ -70,8 +69,8 @@ class _ChatLoadingState extends ConsumerState<ChatLoading> {
                       ) ??
                           false;
                       if (confirm) {
-                        ref.read(chatDetailProvider.notifier)
-                            .leaveChatRoom(widget.chatRoomId);
+                        ref.read(chatDetailViewModelProvider(widget.chatRoomId).notifier)
+                            .leaveChatRoom();
                         ref.read(homeRandomChatViewModelProvider.notifier).getRandomChatInfo();
                         context.pop();
                       }

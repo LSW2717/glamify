@@ -15,20 +15,16 @@ class HomeMatchingButtonViewModel extends _$HomeMatchingButtonViewModel {
   @override
   bool build(List<AnimationController> controllers,
       List<Animation<double>> animations) {
-
-
+    ref.listen(routerProvider, (previous, next){
+      if (previous != next) {
+        print('되나?');
+        stopButton();
+      }
+    });
     ref.onDispose((){
 
     });
     return false;
-  }
-  void _onRouteChange() {
-    final router = ref.read(routerProvider);
-    final currentLocation  = router.routerDelegate.currentConfiguration.fullPath;
-    print(currentLocation);
-    if (currentLocation != '/') {
-      stopButton();
-    }
   }
 
   void toggleButton() {
