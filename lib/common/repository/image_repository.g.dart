@@ -35,7 +35,7 @@ class _ImageRepository implements ImageRepository {
     )
             .compose(
               _dio.options,
-              '/get_upload_image_url',
+              '/get_upload_image_uri',
               queryParameters: queryParameters,
               data: _data,
             )

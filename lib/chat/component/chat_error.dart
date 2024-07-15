@@ -11,7 +11,6 @@ import '../model/chat_room_response_model.dart';
 import 'chat_bottom_bar.dart';
 
 class ChatError extends StatefulWidget {
-
   const ChatError({
     super.key,
   });
@@ -69,6 +68,7 @@ class _ChatErrorState extends State<ChatError> {
         customBottomWidget: ChatBottomBar(
           sendPressed: (text) {},
           controller: controller,
+          sendImage: () {},
         ),
         theme: DefaultChatTheme(
           messageBorderRadius: 10,

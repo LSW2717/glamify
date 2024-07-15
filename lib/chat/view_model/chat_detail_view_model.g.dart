@@ -7,7 +7,7 @@ part of 'chat_detail_view_model.dart';
 // **************************************************************************
 
 String _$chatDetailViewModelHash() =>
-    r'8ddedada3f58de8f842c6cac6fc7b40eb17c60f9';
+    r'dcf8fb5735174b7688c5346a2e988432190623bb';
 
 /// Copied from Dart SDK
 class _SystemHash {

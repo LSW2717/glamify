@@ -13,6 +13,7 @@ import 'package:glamify/user/model/user_model.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../common/const/colors.dart';
@@ -33,7 +34,8 @@ class ChatDetailView extends ConsumerStatefulWidget {
   ConsumerState<ChatDetailView> createState() => _ChatDetailViewState();
 }
 
-class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
+class _ChatDetailViewState extends ConsumerState<ChatDetailView>
+    with WidgetsBindingObserver {
   late TextEditingController textController;
   late FocusNode focusNode;
   final GlobalKey<ChatState> _chatKey = GlobalKey();
@@ -43,6 +45,7 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
   void initState() {
     super.initState();
     textController = TextEditingController();
+    WidgetsBinding.instance.addObserver(this);
     focusNode = FocusNode();
   }
 
@@ -65,7 +68,20 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
     textController.dispose();
     focusNode.dispose();
     _throttleTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      ref.refresh(chatMessageViewModelProvider(0));
+    } else if (state == AppLifecycleState.resumed) {
+      print('이거');
+      ref.refresh(chatMessageViewModelProvider(widget.chatRoomId));
+      ref.refresh(chatDetailViewModelProvider(widget.chatRoomId));
+    }
   }
 
   @override
@@ -79,6 +95,15 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
       final messages =
           ref.watch(chatMessageViewModelProvider(widget.chatRoomId));
       final chatData = chatState.infoResponse;
+
+      final ChatRoomUserResponse emptyUser = ChatRoomUserResponse(
+        userId: -1,
+        nickname: '알수 없음',
+        image: '',
+        messageReadCount: 0,
+        updateDate: DateTime.fromMillisecondsSinceEpoch(0),
+      );
+
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
@@ -105,9 +130,7 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
                 ref
                     .read(chatMessageViewModelProvider(widget.chatRoomId)
                         .notifier)
-                    .sendMessage(
-                      text.text,
-                    );
+                    .sendMessage(text.text);
               }
             },
             showUserAvatars: true,
@@ -119,20 +142,12 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
             user: types.User(
               id: userState.user.userId.toString(),
             ),
-            emptyState: Center(
+            emptyState: const Center(
               child: Text(
-                '대화를 주고받아 보세요!',
-                style: headerText3,
+                '',
               ),
             ),
             nameBuilder: (user) {
-              final ChatRoomUserResponse emptyUser = ChatRoomUserResponse(
-                userId: -1,
-                nickname: '알수 없음',
-                image: '',
-                messageReadCount: 0,
-                updateDate: DateTime.fromMillisecondsSinceEpoch(0),
-              );
               if (chatData.chatRoomUsers.isEmpty) {
                 return const Text(
                   '알수 없음',
@@ -143,20 +158,14 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
                 (u) => u.userId == int.parse(user.id),
                 orElse: () => emptyUser,
               );
-              final userName = foundUser.nickname.isNotEmpty? foundUser.nickname : '알수 없음';
+              final userName =
+                  foundUser.nickname.isNotEmpty ? foundUser.nickname : '알수 없음';
               return Text(
                 userName,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               );
             },
             avatarBuilder: (user) {
-              final ChatRoomUserResponse emptyUser = ChatRoomUserResponse(
-                userId: -1,
-                nickname: '알수 없음',
-                image: '',
-                messageReadCount: 0,
-                updateDate: DateTime.fromMillisecondsSinceEpoch(0),
-              );
               if (chatData.chatRoomUsers.isEmpty) {
                 return Container(
                   margin: EdgeInsets.only(right: 5.w),
@@ -170,7 +179,8 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
                 (u) => u.userId == int.parse(user.id),
                 orElse: () => emptyUser,
               );
-              final userImage = foundUser.image.isNotEmpty ? foundUser.nickname : '';
+              final userImage =
+                  foundUser.image.isNotEmpty ? foundUser.nickname : '';
               return Container(
                 margin: EdgeInsets.only(right: 5.w),
                 child: CircleAvatar(
@@ -184,14 +194,23 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
             timeFormat: DateFormat('a h시 m분', 'ko_KR'),
             customBottomWidget: ChatBottomBar(
               controller: textController,
+              sendImage: () async {
+                ImagePicker picker = ImagePicker();
+                final XFile? image =
+                    await picker.pickImage(source: ImageSource.gallery);
+                if(image != null){
+                  ref
+                      .read(chatMessageViewModelProvider(widget.chatRoomId)
+                      .notifier)
+                      .sendImageMessage(image);
+                }
+              },
               sendPressed: (text) {
                 if (text.isNotEmpty && mounted) {
                   ref
                       .read(chatMessageViewModelProvider(widget.chatRoomId)
                           .notifier)
-                      .sendMessage(
-                        text,
-                      );
+                      .sendMessage(text);
                 }
               },
             ),
@@ -214,7 +233,7 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView> {
               dateDividerTextStyle: bodyText1.copyWith(color: base5),
               bubbleMargin:
                   EdgeInsets.symmetric(vertical: 1.w, horizontal: 14.w),
-              userAvatarNameColors: [main1, main2],
+              userAvatarNameColors: const [main1, main2],
             ),
           ),
         ),

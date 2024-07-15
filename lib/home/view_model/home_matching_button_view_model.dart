@@ -13,33 +13,23 @@ class HomeMatchingButtonViewModel extends _$HomeMatchingButtonViewModel {
   ChatRepository get chatRepository => ref.watch(chatRepositoryProvider);
 
   @override
-  bool build(List<AnimationController> controllers,
-      List<Animation<double>> animations) {
-    ref.listen(routerProvider, (previous, next){
-      if (previous != next) {
-        print('되나?');
-        stopButton();
-      }
-    });
-    ref.onDispose((){
-
-    });
+  bool build() {
     return false;
   }
 
   void toggleButton() {
     state = !state;
     if(state == true){
-      startAnimations();
+      requestMatching();
     }else{
-      stopAnimations();
+      quitMatching();
     }
   }
 
-  void stopButton(){
+  void setFalse(){
     state = false;
-    stopAnimations();
   }
+
 
   Future<void> requestMatching() async {
     await chatRepository.requestChatWaiting();
@@ -47,22 +37,5 @@ class HomeMatchingButtonViewModel extends _$HomeMatchingButtonViewModel {
 
   Future<void> quitMatching() async {
     await chatRepository.quitRandomChatWaiting();
-  }
-
-  void startAnimations() {
-    for (int i = 0; i < controllers.length; i++) {
-      Future.delayed(Duration(milliseconds: i * 150), () {
-        controllers[i].repeat(reverse: false);
-      });
-    }
-    requestMatching();
-  }
-
-  void stopAnimations() {
-    for (var controller in controllers) {
-      controller.stop();
-      controller.reset();
-    }
-    quitMatching();
   }
 }

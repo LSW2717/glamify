@@ -2,14 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:glamify/chat/repository/chat_repository.dart';
 import 'package:glamify/common/global_variable/global_variable.dart';
+import 'package:glamify/common/model/image_request.dart';
+import 'package:glamify/common/repository/image_repository.dart';
 import 'package:glamify/home/view_model/home_random_chat_view_model.dart';
 import 'package:glamify/user/model/user_model.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -29,7 +33,9 @@ part 'chat_message_view_model.g.dart';
 class ChatMessageViewModel extends _$ChatMessageViewModel {
   late WebSocketChannel channel;
 
-  ChatRepository get repository => ref.watch(chatRepositoryProvider);
+  ChatRepository get chatRepository => ref.watch(chatRepositoryProvider);
+
+  ImageRepository get imageRepository => ref.watch(imageRepositoryProvider);
 
   String get token => ref.watch(getTokenViewModelProvider);
 
@@ -46,6 +52,9 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       listener();
+    });
+    ref.onDispose(() {
+      chatRoomId = 0;
     });
     return [];
   }
@@ -64,7 +73,7 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
           chatRoomId: chatRoomId,
           targetDate: requestDate,
         );
-        final chatMessages = await repository.getAllMessage(request);
+        final chatMessages = await chatRepository.getAllMessage(request);
         lastMessageDate = chatMessages.data!.messages.last.registerDate;
 
         totalCount = chatData.chatRoomInfo.messageCount;
@@ -76,8 +85,7 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
 
         //type.Message로 변환
         final List<types.Message> messageList =
-            chatMessages.data!.messages.map(toTextMessage).toList();
-
+            convertMessages(chatMessages.data!.messages);
         //각 메세지에 readMember넣어줌
         for (var i = 0; i < messageList.length; i++) {
           List<int> readMembers = [];
@@ -92,13 +100,13 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
           });
         }
 
-        //각 메세지마다 랜덤넘버 부여
-        for (int i = 0; i < messageList.length; i++) {
-          Random random = Random();
-          messageList[i] = messageList[i].copyWith(
-            id: '${messageList[i].id}-${random.nextInt(1000)}',
-          );
-        }
+        // //각 메세지마다 랜덤넘버 부여
+        // for (int i = 0; i < messageList.length; i++) {
+        //   Random random = Random();
+        //   messageList[i] = messageList[i].copyWith(
+        //     id: '${messageList[i].id}-${random.nextInt(1000)}',
+        //   );
+        // }
 
         //메세지가 없거나 30개 이하면 마지막페이지
         if (messageList.length < 30 || messageList.isEmpty) {
@@ -118,28 +126,72 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
     try {
       final request = SendMessageRequest(
           message: message, chatRoomId: chatRoomId, messageType: 'TEXT');
-      await repository.sendMessage(request);
-      addMessage(message);
+      await chatRepository.sendMessage(request);
+      addMessage(message, 'TEXT');
     } catch (e) {
       print(e.toString());
     }
   }
 
-  void addMessage(String message) {
+  Future<void> sendImageMessage(XFile image) async {
+    // final dio = Dio();
+    // final response =
+    //     await imageRepository.getUploadImageUri(ImageRequest(isProfile: false));
+    //
+    // if(response.code == 200){
+    //   final uploadUri = response.data!.uploadUri;
+    //   final file = await MultipartFile.fromFile(image.path, filename: image.name);
+    //   final formData = FormData.fromMap({
+    //     'file': file,
+    //   });
+    //   print(response.data!.uploadUri);
+    //   print(response.data!.loadUri);
+    //   final imageResponse = await dio.put(uploadUri, data: formData);
+    //   if(imageResponse.statusCode == 200){
+    //   }
+    // }
+    final String url =
+        'http://k.kakaocdn.net/dn/1G9kp/btsAot8liOn/8CWudi3uy07rvFNUkk3ER0/img_640x640.jpg';
+
+    final request = SendMessageRequest(
+        message: '', chatRoomId: chatRoomId, messageType: 'IMAGE');
+    await chatRepository.sendMessage(request);
+    addMessage(url, 'IMAGE');
+  }
+
+  void addMessage(String message, String type) {
     var now = DateTime.now().millisecondsSinceEpoch;
     var uniqueId = Uuid().v4();
     var random = Random().nextInt(100000);
     final userState = ref.read(userViewModelProvider);
     if (userState is LoadedUserState) {
-      final textMessage = types.TextMessage(
-        author: types.User(id: userState.user.userId.toString()),
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        id: '$now - $uniqueId - $random',
-        text: message,
-        metadata: const {'readMember': []},
-      );
-      ref.read(chatDetailViewModelProvider(chatRoomId).notifier).updateMessageReadCount();
-      state = [textMessage, ...state];
+      if (type == 'TEXT') {
+        final textMessage = types.TextMessage(
+          author: types.User(id: userState.user.userId.toString()),
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          id: '$now - $uniqueId - $random',
+          text: message,
+          metadata: const {'readMember': []},
+        );
+        ref
+            .read(chatDetailViewModelProvider(chatRoomId).notifier)
+            .updateMessageReadCount();
+        state = [textMessage, ...state];
+      } else if (type == 'IMAGE') {
+        final imageMessage = types.ImageMessage(
+          author: types.User(id: userState.user.userId.toString()),
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          id: '$now - $uniqueId - $random',
+          uri: message,
+          name: '',
+          size: 20,
+          metadata: const {'readMember': []},
+        );
+        ref
+            .read(chatDetailViewModelProvider(chatRoomId).notifier)
+            .updateMessageReadCount();
+        state = [imageMessage, ...state];
+      }
     }
   }
 
@@ -170,9 +222,13 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
           final chatMatchResponse =
               ChatMatchResponse.fromJson(decodedMessage['data']);
           print('룸아이디: ${chatMatchResponse.chatRoomId}');
-          if(chatMatchResponse.randomYN == 'Y'){
-            ref.read(homeRandomChatViewModelProvider.notifier).getRandomChatInfo();
-            ref.read(chatDetailViewModelProvider(chatMatchResponse.chatRoomId).notifier)
+          if (chatMatchResponse.randomYN == 'Y') {
+            ref
+                .read(homeRandomChatViewModelProvider.notifier)
+                .getRandomChatInfo();
+            ref
+                .read(chatDetailViewModelProvider(chatMatchResponse.chatRoomId)
+                    .notifier)
                 .getMessageInfo()
                 .then((_) {
               if (GlobalVariable.naviagatorState.currentContext != null) {
@@ -187,8 +243,6 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
             decodedMessage,
             (json) => MessageData.fromJson(json as Map<String, dynamic>),
           );
-          print('이거이거좀 되라${chatMessage.data.chatId}');
-          print('이거좀되라$chatMessage');
           ref.read(chatListProvider.notifier).updateChatListMessage(
                 chatMessage.data.chatRoomId,
                 chatMessage.data.message,
@@ -197,17 +251,24 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
             totalCount = chatMessage.data.messageCount;
             if (userState.user.userId != chatMessage.data.senderId) {
               ref
-                  .read(chatDetailViewModelProvider(chatMessage.data.chatRoomId).notifier)
+                  .read(chatDetailViewModelProvider(chatMessage.data.chatRoomId)
+                      .notifier)
                   .updateMessageReadCount();
-              getMessageList();
-              var random = Random().nextInt(100000);
-              final textMessage = types.TextMessage(
-                author: types.User(id: chatMessage.data.senderId.toString()),
-                createdAt: DateTime.now().millisecondsSinceEpoch,
-                id: '${chatMessage.data.chatId} - $random',
-                text: chatMessage.data.message,
+              final message = Message(
+                chatId: chatMessage.data.chatId,
+                userId: chatMessage.data.senderId,
+                registerDate: DateTime.now(),
+                chatRoomId: chatMessage.data.chatRoomId,
+                message: chatMessage.data.message,
+                messageType: chatMessage.data.messageType,
               );
-              state = [textMessage, ...state];
+              if (chatMessage.data.messageType == 'TEXT') {
+                final textMessage = toTextMessage(message);
+                state = [textMessage, ...state];
+              } else if (chatMessage.data.messageType == 'IMAGE') {
+                final imageMessage = toImageMessage(message);
+                state = [imageMessage, ...state];
+              }
             }
           }
         }
@@ -239,5 +300,30 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
       text: message.message,
       metadata: const {'readMember': []},
     );
+  }
+
+  types.ImageMessage toImageMessage(Message message) {
+    return types.ImageMessage(
+      author: types.User(id: message.userId.toString()),
+      createdAt: message.registerDate.millisecondsSinceEpoch,
+      id: message.chatId,
+      uri: message.message,
+      name: '',
+      size: 20,
+      metadata: const {'readMember': []},
+    );
+  }
+
+  List<types.Message> convertMessages(List<Message> messages) {
+    List<types.Message> convertedMessages = [];
+
+    for (var message in messages) {
+      if (message.messageType == 'TEXT') {
+        convertedMessages.add(toTextMessage(message));
+      } else if (message.messageType == 'IMAGE') {
+        convertedMessages.add(toImageMessage(message));
+      }
+    }
+    return convertedMessages;
   }
 }

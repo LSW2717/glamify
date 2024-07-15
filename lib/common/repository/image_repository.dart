@@ -20,7 +20,7 @@ ImageRepository imageRepository(ImageRepositoryRef ref) {
 abstract class ImageRepository{
   factory ImageRepository(Dio dio, {String baseUrl}) = _ImageRepository;
 
-  @POST('/get_upload_image_url')
+  @POST('/get_upload_image_uri')
   @Headers({
     'accessToken': 'true',
   })

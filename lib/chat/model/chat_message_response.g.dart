@@ -63,6 +63,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       registerDate: DateTime.parse(json['register_date'] as String),
       chatRoomId: (json['chat_room_id'] as num).toInt(),
       message: json['message'] as String,
+      messageType: json['message_type'] as String,
     );
 
 Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
@@ -71,6 +72,7 @@ Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
       'register_date': instance.registerDate.toIso8601String(),
       'chat_room_id': instance.chatRoomId,
       'message': instance.message,
+      'message_type': instance.messageType,
     };
 
 MessageList _$MessageListFromJson(Map<String, dynamic> json) => MessageList(

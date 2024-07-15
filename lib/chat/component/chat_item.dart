@@ -77,11 +77,15 @@ class ChatItem extends StatelessWidget {
                           style: headerText2,
                         ),
                         SizedBox(height: 5.w),
-                        Text(
-                          lastMessage,
-                          style: headerText4.copyWith(color: gray700),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: 220.w),
+                          child: Text(
+                            lastMessage,
+                            style: headerText4.copyWith(color: gray700),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,
+                          ),
                         ),
                       ],
                     )

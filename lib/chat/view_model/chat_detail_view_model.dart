@@ -32,6 +32,19 @@ class ChatDetailViewModel extends _$ChatDetailViewModel {
     }
   }
 
+  Future<void> updateMessageInfo() async{
+    try {
+      final infoRequest = ChatRoomRequest(chatRoomId: id);
+      final chatInfo = await repository.getChatRoomInfo(infoRequest);
+      if(chatInfo.data != null){
+        state = LoadedChatState(chatInfo.data!);
+      }
+    } catch (e) {
+      state = ErrorChatState(e.toString());
+      print(e.toString());
+    }
+  }
+
   Future<void> leaveChatRoom() async {
     try {
       final request = ChatRoomRequest(chatRoomId: id);

@@ -82,6 +82,10 @@ class ChatView extends ConsumerWidget {
                             ...chatList
                                 .asMap()
                                 .map((index, data) {
+                              int unreadCount = 0;
+                              if (index < chatReadCount.length) {
+                                unreadCount = data.messageCount - chatReadCount[index].messageReadCount;
+                              }
                               return MapEntry(
                                 index,
                                 ChatItem(
@@ -93,13 +97,11 @@ class ChatView extends ConsumerWidget {
                                         extra: data.chatRoomId);
                                     print(data.chatRoomId);
                                   },
-                                  count: data.messageCount -
-                                      chatReadCount[index].messageReadCount,
+                                  count: unreadCount,
                                 ),
                               );
                             })
-                                .values
-                                .toList(),
+                                .values,
                           ],
                         ),
                         const ChatInviteView(),

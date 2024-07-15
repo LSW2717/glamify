@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glamify/chat/model/chat_room_request_model.dart';
 import 'package:glamify/chat/view_model/chat_detail_view_model.dart';
 import 'package:glamify/chat/view_model/chat_invite_list_view_model.dart';
+import 'package:glamify/chat/view_model/chat_list_view_model.dart';
+import 'package:glamify/chat/view_model/chat_message_view_model.dart';
 import 'package:glamify/common/const/typography.dart';
 import 'package:glamify/common/layout/default_layout.dart';
 import 'package:glamify/home/view_model/home_random_chat_view_model.dart';
@@ -96,14 +98,15 @@ class ChatInviteView extends ConsumerWidget {
                                         InvitationRequest(
                                             chatInvitationId:
                                                 data.chatInvitationId);
-                                    ref
+                                    await ref
                                         .read(chatInviteListProvider.notifier)
                                         .confirmInviteChat(request);
-                                    ref
+                                    await ref
                                         .read(chatInviteListProvider.notifier)
                                         .getChatInviteList();
-                                    ref.refresh(
-                                        homeRandomChatViewModelProvider);
+                                    await ref
+                                        .read(chatListProvider.notifier)
+                                        .updateChatList();
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -118,32 +121,27 @@ class ChatInviteView extends ConsumerWidget {
                               SizedBox(width: 20.w),
                               ElevatedButton(
                                   onPressed: () async {
-                                    final bool confirm =
-                                        await showDialog<bool>(
-                                              context: context,
-                                              builder:
-                                                  (BuildContext context) {
-                                                return const AlarmMessage(
-                                                  title: '거절',
-                                                  content: '대화 싫어용?',
-                                                );
-                                              },
-                                            ) ??
-                                            false;
+                                    final bool confirm = await showDialog<bool>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return const AlarmMessage(
+                                              title: '거절',
+                                              content: '대화 싫어용?',
+                                            );
+                                          },
+                                        ) ??
+                                        false;
                                     if (confirm) {
                                       final InvitationRequest request =
                                           InvitationRequest(
                                               chatInvitationId:
                                                   data.chatInvitationId);
-                                      ref
+                                      await ref
                                           .read(chatInviteListProvider.notifier)
                                           .rejectInviteChat(request);
-                                      ref
-                                          .read(
-                                              chatInviteListProvider.notifier)
+                                      await ref
+                                          .read(chatInviteListProvider.notifier)
                                           .getChatInviteList();
-                                      ref.refresh(
-                                          homeRandomChatViewModelProvider);
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(

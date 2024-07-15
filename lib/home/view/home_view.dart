@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import '../../chat/view_model/chat_detail_view_model.dart';
 import '../../chat/view_model/chat_message_view_model.dart';
 import '../../common/const/colors.dart';
+import '../component/circle_painter.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -22,39 +23,28 @@ class HomeView extends ConsumerStatefulWidget {
 
 class _HomeViewState extends ConsumerState<HomeView>
     with TickerProviderStateMixin {
-  late List<AnimationController> _controllers;
-  late List<Animation<double>> _animations;
+  late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(4, (index) {
-      return AnimationController(
-        vsync: this,
-        duration: const Duration(seconds: 1),
-      );
-    });
-    _animations = _controllers.map((controller) {
-      return Tween(begin: 1.0, end: 2.0).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeOut,
-      ));
-    }).toList();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    )..repeat();
   }
 
   @override
   void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final homeChatState = ref.watch(homeRandomChatViewModelProvider);
-    final matchingButton = ref
-        .watch(homeMatchingButtonViewModelProvider(_controllers, _animations));
+    final matchingButton =
+        ref.watch(homeMatchingButtonViewModelProvider);
     ref.watch(fcmProvider);
     ref.watch(chatMessageViewModelProvider(0));
     if (homeChatState is LoadedHomeChatState) {
@@ -111,30 +101,50 @@ class _HomeViewState extends ConsumerState<HomeView>
               ],
             ),
           ),
-          for (int i = 0; i < _animations.length; i++)
-            Center(
-              child: AnimatedBuilder(
-                animation: _animations[i],
-                builder: (context, child) {
-                  return Container(
-                    width: 207.0 * _animations[i].value,
-                    height: 207.0 * _animations[i].value,
+          if(matchingButton)
+          Center(
+            child: CustomPaint(
+              painter: CirclePainter(
+                _controller,
+                colorValue: main1,
+              ),
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    ref
+                        .read(homeMatchingButtonViewModelProvider.notifier)
+                        .toggleButton();
+                  },
+                  style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+                  child: Container(
+                    width: 207.w,
+                    height: 207.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.pinkAccent.withOpacity(
-                        (1.0 - (_animations[i].value - 1.0)).clamp(0.0, 1.0),
+                      border: Border.all(
+                        color: main1,
+                        width: 7.0,
+                      ),
+                      color: main2,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'asset/svg/heart.svg',
+                        width: 96.w,
+                        height: 96.w,
                       ),
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
             ),
+          ),
+          if(!matchingButton)
           Center(
             child: ElevatedButton(
               onPressed: () {
-                ref.read(homeMatchingButtonViewModelProvider(
-                            _controllers, _animations)
-                        .notifier)
+                ref
+                    .read(homeMatchingButtonViewModelProvider.notifier)
                     .toggleButton();
               },
               style: ElevatedButton.styleFrom(shape: const CircleBorder()),

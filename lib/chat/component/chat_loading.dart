@@ -15,6 +15,7 @@ import 'chat_bottom_bar.dart';
 
 class ChatLoading extends ConsumerStatefulWidget {
   final int chatRoomId;
+
   const ChatLoading({
     required this.chatRoomId,
     super.key,
@@ -59,19 +60,23 @@ class _ChatLoadingState extends ConsumerState<ChatLoading> {
                 PopupMenuItem<int>(
                     onTap: () async {
                       final bool confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const AlarmMessage(
-                            title: '나가기',
-                            content: '채팅방을 나가시겠습니까?',
-                          );
-                        },
-                      ) ??
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const AlarmMessage(
+                                title: '나가기',
+                                content: '채팅방을 나가시겠습니까?',
+                              );
+                            },
+                          ) ??
                           false;
                       if (confirm) {
-                        ref.read(chatDetailViewModelProvider(widget.chatRoomId).notifier)
+                        ref
+                            .read(chatDetailViewModelProvider(widget.chatRoomId)
+                                .notifier)
                             .leaveChatRoom();
-                        ref.read(homeRandomChatViewModelProvider.notifier).getRandomChatInfo();
+                        ref
+                            .read(homeRandomChatViewModelProvider.notifier)
+                            .getRandomChatInfo();
                         context.pop();
                       }
                     },
@@ -98,7 +103,7 @@ class _ChatLoadingState extends ConsumerState<ChatLoading> {
         onSendPressed: (text) {},
         showUserAvatars: true,
         showUserNames: true,
-        user: User(id: ''),
+        user: const User(id: ''),
         emptyState: const Center(
             child: CircularProgressIndicator(
           color: main1,
@@ -106,6 +111,7 @@ class _ChatLoadingState extends ConsumerState<ChatLoading> {
         customBottomWidget: ChatBottomBar(
           sendPressed: (text) {},
           controller: controller,
+          sendImage: () {},
         ),
         theme: DefaultChatTheme(
           messageBorderRadius: 10,

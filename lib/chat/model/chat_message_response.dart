@@ -79,12 +79,16 @@ class Message {
 
   final String message;
 
+  @JsonKey(name: 'message_type')
+  final String messageType;
+
   Message({
     required this.chatId,
     required this.userId,
     required this.registerDate,
     required this.chatRoomId,
     required this.message,
+    required this.messageType,
   });
 
   factory Message.fromJson(Map<String, dynamic> json) => _$MessageFromJson(json);

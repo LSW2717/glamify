@@ -51,7 +51,6 @@ class _AppState extends ConsumerState<App> {
     ref.read(websocketProvider).connect();
     ref.read(fcmProvider).removeBadge();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      await showFlutterNotification(message);
       ref.read(homeRandomChatViewModelProvider.notifier).getRandomChatInfo();
       ref.read(chatListProvider.notifier).updateChatList();
     });

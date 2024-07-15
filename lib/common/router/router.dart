@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glamify/chat/view/chat_invite_view.dart';
+import 'package:glamify/chat/view_model/chat_detail_view_model.dart';
 import 'package:glamify/chat/view_model/chat_list_view_model.dart';
 import 'package:glamify/chat/view_model/chat_message_view_model.dart';
 import 'package:glamify/mypage/view/my_page_update_nickname_view.dart';
@@ -46,6 +47,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
             onExit: (context) {
               ref.read(chatListProvider.notifier).updateChatList();
+              ref.refresh(chatMessageViewModelProvider(0));
               return true;
             },
           ),
@@ -58,6 +60,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
             onExit: (context) {
               ref.read(chatListProvider.notifier).updateChatList();
+              ref.refresh(chatMessageViewModelProvider(0));
               return true;
             },
           ),
