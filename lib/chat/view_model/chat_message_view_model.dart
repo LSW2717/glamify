@@ -134,31 +134,37 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
   }
 
   Future<void> sendImageMessage(XFile image) async {
-    // final dio = Dio();
-    // final response =
-    //     await imageRepository.getUploadImageUri(ImageRequest(isProfile: false));
-    //
-    // if(response.code == 200){
-    //   final uploadUri = response.data!.uploadUri;
-    //   final file = await MultipartFile.fromFile(image.path, filename: image.name);
-    //   final formData = FormData.fromMap({
-    //     'file': file,
-    //   });
-    //   print(response.data!.uploadUri);
-    //   print(response.data!.loadUri);
-    //   final imageResponse = await dio.put(uploadUri, data: formData);
-    //   if(imageResponse.statusCode == 200){
-    //   }
-    // }
-    final String url =
-        'http://k.kakaocdn.net/dn/1G9kp/btsAot8liOn/8CWudi3uy07rvFNUkk3ER0/img_640x640.jpg';
+    final dio = Dio();
+    final response = await imageRepository.getUploadImageUri(ImageRequest(isProfile: false));
 
-    final request = SendMessageRequest(
-        message: '', chatRoomId: chatRoomId, messageType: 'IMAGE');
-    await chatRepository.sendMessage(request);
-    addMessage(url, 'IMAGE');
+    if (response.code == 200) {
+      final uploadUri = response.data!.uploadUri;
+      final loadUri = response.data!.loadUri;
+
+      try {
+        final file = await image.readAsBytes();
+        await dio.put(uploadUri, data: file, options: Options(
+          headers: {
+            Headers.contentTypeHeader: 'image/jpeg',
+            Headers.contentLengthHeader: file.length,
+          },
+        ));
+
+        // 이미지 업로드 후 메시지 전송
+        final url = loadUri;
+        final request = SendMessageRequest(
+            message: url, chatRoomId: chatRoomId, messageType: 'IMAGE');
+        await chatRepository.sendMessage(request);
+
+        // 메시지 리스트에 추가
+        addMessage(url, 'IMAGE');
+      } catch (e) {
+        print('Error uploading image: $e');
+      }
+    } else {
+      print('Error getting upload URI: ${response.message}');
+    }
   }
-
   void addMessage(String message, String type) {
     var now = DateTime.now().millisecondsSinceEpoch;
     var uniqueId = Uuid().v4();
