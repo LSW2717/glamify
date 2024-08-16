@@ -6,7 +6,6 @@ import 'package:glamify/common/data_source/data.dart';
 import 'package:glamify/common/secure_storage/secure_storage.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
 
-import '../../home/view_model/home_random_chat_view_model.dart';
 import 'notification_setting.dart';
 
 final fcmProvider = Provider<FcmManager>((ref) {

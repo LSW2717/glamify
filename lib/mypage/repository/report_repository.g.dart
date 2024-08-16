@@ -51,6 +51,71 @@ class _ReportRepository implements ReportRepository {
     return value;
   }
 
+  @override
+  Future<ResponseDto<EmptyDto>> sendInquiry(InquiryRequest request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseDto<EmptyDto>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/send_inquiry',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResponseDto<EmptyDto>.fromJson(
+      _result.data!,
+      (json) => EmptyDto.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ResponseDto<InquiryResponse>> getInquiries(
+      SkipAndLimit request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseDto<InquiryResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/get_inquiries',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResponseDto<InquiryResponse>.fromJson(
+      _result.data!,
+      (json) => InquiryResponse.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
@@ -86,11 +151,11 @@ class _ReportRepository implements ReportRepository {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$reportRepositoryHash() => r'f19aeac85ed23fc172c94cb64d66f611b7e9e92b';
+String _$reportRepositoryHash() => r'7b25a3c6abb441d3824a9d247c82c87db73c732d';
 
 /// See also [reportRepository].
 @ProviderFor(reportRepository)
-final reportRepositoryProvider = Provider<ReportRepository>.internal(
+final reportRepositoryProvider = AutoDisposeProvider<ReportRepository>.internal(
   reportRepository,
   name: r'reportRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -100,6 +165,6 @@ final reportRepositoryProvider = Provider<ReportRepository>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef ReportRepositoryRef = ProviderRef<ReportRepository>;
+typedef ReportRepositoryRef = AutoDisposeProviderRef<ReportRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

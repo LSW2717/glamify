@@ -28,10 +28,17 @@ class AuthViewModel extends ChangeNotifier {
 
   String? redirectLogic(BuildContext context, GoRouterState state) {
     final UserState? user = ref.read(userViewModelProvider);
-    final isSettingIn = state.uri.path == '/setting';
-    // if (user is! UserModel && isSettingIn == true) {
-    //   return '/';
-    // }
+    final currentPath = state.uri.path;
+
+    if(user is InitUserState){
+      return '/';
+    }
+    else if(user is ErrorUserState || user is LoadingUserState){
+      return '/login';
+    }
+    else if(user is !LoadedUserState && currentPath != '/login'){
+      return '/login';
+    }
     return null;
   }
 }

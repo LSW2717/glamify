@@ -14,6 +14,7 @@ ChatRoomResponse _$ChatRoomResponseFromJson(Map<String, dynamic> json) =>
       updateDate: DateTime.parse(json['update_date'] as String),
       randomYN: json['random_YN'] as String,
       name: json['name'] as String?,
+      image: json['image'] as String,
       lastMessage: json['last_message'] as String,
       messageCount: (json['message_count'] as num).toInt(),
     );
@@ -26,6 +27,7 @@ Map<String, dynamic> _$ChatRoomResponseToJson(ChatRoomResponse instance) =>
       'update_date': instance.updateDate.toIso8601String(),
       'random_YN': instance.randomYN,
       'name': instance.name,
+      'image': instance.image,
       'last_message': instance.lastMessage,
       'message_count': instance.messageCount,
     };

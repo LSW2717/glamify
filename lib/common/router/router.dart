@@ -7,18 +7,23 @@ import 'package:glamify/chat/view/chat_invite_view.dart';
 import 'package:glamify/chat/view_model/chat_detail_view_model.dart';
 import 'package:glamify/chat/view_model/chat_list_view_model.dart';
 import 'package:glamify/chat/view_model/chat_message_view_model.dart';
+import 'package:glamify/mypage/view/login_view.dart';
 import 'package:glamify/mypage/view/my_page_update_nickname_view.dart';
 import 'package:glamify/mypage/view/noti_setting_view.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../chat/view/chat_detail_view.dart';
+import '../../mypage/view/report_list_view.dart';
+import '../../mypage/view/send_report_view.dart';
 import '../../mypage/view/setting_view.dart';
+import '../../user/model/user_model.dart';
 import '../../user/view_model/auth_view_model.dart';
 import '../global_variable/global_variable.dart';
+import '../view/full_screen_gallery.dart';
 import '../view/root_tab.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final provider =  ref.watch(authProvider);
+  final provider = ref.watch(authProvider);
   Page<dynamic> platformPage(Widget child, String key) {
     return Platform.isIOS
         ? CupertinoPage<void>(key: ValueKey(key), child: child)
@@ -39,11 +44,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => platformPage(const RootTab(), '/'),
         routes: [
           GoRoute(
+            path: 'login',
+            pageBuilder: (context, state) => platformPage(const LoginView(), 'login'),
+          ),
+          GoRoute(
             path: 'chatDetail',
             pageBuilder: (context, state) {
               final chatRoomId = state.extra as int;
               return platformPage(
-                  ChatDetailView(chatRoomId: chatRoomId),'chatDetail');
+                  ChatDetailView(chatRoomId: chatRoomId), 'chatDetail');
             },
             onExit: (context) {
               ref.read(chatListProvider.notifier).updateChatList();
@@ -67,7 +76,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'updateNickname',
             pageBuilder: (context, state) {
-              return platformPage(const UpdateNickNameView(), 'updateNickname');
+              final user = state.extra as UserModel;
+              return platformPage(
+                  UpdateNickNameView(user: user), 'updateNickname');
             },
           ),
           GoRoute(
@@ -85,10 +96,33 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
           GoRoute(
+            path: 'fullScreenGallery',
+            pageBuilder: (context, state) {
+              final imageUrl = state.extra as String;
+              return platformPage(
+                  FullScreenGallery(imageUrl: imageUrl, initialIndex: 0),
+                  'fullScreenGallery');
+            },
+          ),
+          GoRoute(
             path: 'invite',
             pageBuilder: (context, state) {
               return platformPage(const ChatInviteView(), 'invite');
             },
+          ),
+          GoRoute(
+            path: 'report',
+            pageBuilder: (context, state) {
+              return platformPage(const ReportListView(), 'report');
+            },
+            routes: [
+              GoRoute(
+                path: 'sendReport',
+                pageBuilder: (context, state) {
+                  return platformPage(const SendReportView(), 'sendReport');
+                },
+              ),
+            ],
           ),
         ],
       ),

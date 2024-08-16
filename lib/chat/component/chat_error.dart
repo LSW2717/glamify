@@ -56,7 +56,6 @@ class _ChatErrorState extends State<ChatError> {
       child: Chat(
         messages: const [],
         onSendPressed: (text) {},
-        showUserAvatars: true,
         showUserNames: true,
         user: const User(id: ''),
         emptyState: Center(

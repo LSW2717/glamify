@@ -11,6 +11,8 @@ class ErrorUserState extends UserState {
   });
 }
 
+class InitUserState extends UserState {}
+
 class LoadingUserState extends UserState {}
 
 @JsonSerializable()

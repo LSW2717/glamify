@@ -53,42 +53,42 @@ class _HomeViewState extends ConsumerState<HomeView>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 390.w,
-            height: 100.w,
-            color: main1,
-            child: Center(
-              child: Text('광고'),
-            ),
-          ),
+          // Container(
+          //   width: 390.w,
+          //   height: 100.w,
+          //   color: main1,
+          //   child: Center(
+          //     child: Text('광고'),
+          //   ),
+          // ),
           RandomChatCard(
             roomData: chatData,
             onTap: () {
               context.push('/chatDetail2', extra: chatData.chatRoomId);
             },
           ),
-          Container(
-            width: 390.w,
-            height: 100.w,
-            color: main1,
-            child: Center(
-              child: Text('광고'),
-            ),
-          ),
+          // Container(
+          //   width: 390.w,
+          //   height: 100.w,
+          //   color: main1,
+          //   child: Center(
+          //     child: Text('광고'),
+          //   ),
+          // ),
         ],
       );
     } else {
       return Stack(
         children: [
-          Positioned(
-            top: 0,
-            child: Container(
-              width: 390.w,
-              height: 100.w,
-              color: main1,
-              child: Center(child: Text('광고')),
-            ),
-          ),
+          // Positioned(
+          //   top: 0,
+          //   child: Container(
+          //     width: 390.w,
+          //     height: 100.w,
+          //     color: main1,
+          //     child: Center(child: Text('광고')),
+          //   ),
+          // ),
           Center(
             child: Column(
               children: [
@@ -169,15 +169,15 @@ class _HomeViewState extends ConsumerState<HomeView>
               ),
             ),
           ),
-          Positioned(
-            bottom: 0,
-            child: Container(
-              width: 390.w,
-              height: 100.w,
-              color: main1,
-              child: Center(child: Text('광고')),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 0,
+          //   child: Container(
+          //     width: 390.w,
+          //     height: 100.w,
+          //     color: main1,
+          //     child: Center(child: Text('광고')),
+          //   ),
+          // ),
         ],
       );
     }

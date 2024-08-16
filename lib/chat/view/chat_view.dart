@@ -46,65 +46,33 @@ class ChatView extends ConsumerWidget {
             child: CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  SliverAppBar(
-                    automaticallyImplyLeading: false,
-                    backgroundColor: Colors.white,
-                    toolbarHeight: 0.w,
-                    elevation: 0,
-                    scrolledUnderElevation: 0,
-                    pinned: true,
-                    bottom: TabBar(
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicatorColor: Colors.black,
-                      indicatorWeight: 1.w,
-                      labelStyle: headerText4,
-                      labelColor: Colors.black,
-                      unselectedLabelColor: gray600,
-                      tabs: [
-                        Tab(
-                          text: '채팅목록',
-                          height: 48.w,
-                        ),
-                        Tab(
-                          text: '초대목록',
-                          height: 48.w,
-                        ),
-                      ],
-                    ),
-                  ),
                   SliverFillRemaining(
-                    child: TabBarView(
+                    child: chatList.isEmpty
+                        ? const ChatEmptyView() : Column(
                       children: [
-                        chatList.isEmpty
-                            ? const ChatEmptyView() : Column(
-                          children: [
-                            SizedBox(height: 10.w),
-                            ...chatList
-                                .asMap()
-                                .map((index, data) {
-                              int unreadCount = 0;
-                              if (index < chatReadCount.length) {
-                                unreadCount = data.messageCount - chatReadCount[index].messageReadCount;
-                              }
-                              return MapEntry(
-                                index,
-                                ChatItem(
-                                  user: User(id: data.ownerUserId.toString()),
-                                  name: data.name ?? '알수없음',
-                                  lastMessage: data.lastMessage,
-                                  onTap: () {
-                                    context.push('/chatDetail',
-                                        extra: data.chatRoomId);
-                                    print(data.chatRoomId);
-                                  },
-                                  count: unreadCount,
-                                ),
-                              );
-                            })
-                                .values,
-                          ],
-                        ),
-                        const ChatInviteView(),
+                        SizedBox(height: 10.w),
+                        ...chatList
+                            .asMap()
+                            .map((index, data) {
+                          int unreadCount = 0;
+                          if (index < chatReadCount.length) {
+                            unreadCount = data.messageCount - chatReadCount[index].messageReadCount;
+                          }
+                          return MapEntry(
+                            index,
+                            ChatItem(
+                              imageUrl: data.image,
+                              name: data.name ?? '알수없음',
+                              lastMessage: data.lastMessage,
+                              onTap: () {
+                                context.push('/chatDetail',
+                                    extra: data.chatRoomId);
+                              },
+                              count: unreadCount,
+                            ),
+                          );
+                        })
+                            .values,
                       ],
                     ),
                   ),

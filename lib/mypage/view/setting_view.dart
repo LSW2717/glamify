@@ -104,16 +104,16 @@ class SettingView extends ConsumerWidget {
                       if (snapshot.hasError) {
                         return Text(
                           '최신버전',
-                          style: bodyText2.copyWith(color: gray600),
+                          style: headerText4.copyWith(color: gray600),
                         );
                       } else if (!snapshot.hasData) {
                         return Text('최신버전',
-                            style: bodyText2.copyWith(color: gray600));
+                            style: headerText4.copyWith(color: gray600));
                       }
                       final data = snapshot.data!;
                       return Text(
                         'v ${data.version}',
-                        style: bodyText2.copyWith(color: gray600),
+                        style: headerText4.copyWith(color: gray600),
                       );
                     },
                   ),

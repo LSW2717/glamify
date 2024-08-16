@@ -22,3 +22,4 @@ const base5  = Color(0xFFB4BBD4);
 
 const main1 = Color(0xFFFF99D0);
 const main2 = Color(0xFFFF008A);
+const main3 = Color(0xFFFF6480);

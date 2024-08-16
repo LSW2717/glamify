@@ -18,6 +18,7 @@ class DefaultLayout extends StatelessWidget {
   final bool removeAppBar;
   final bool resizeToAvoidBottomInset;
   final VoidCallback backAction;
+  final Widget? bottomSheet;
 
   const DefaultLayout({
     this.backgroundColor = Colors.white,
@@ -30,6 +31,7 @@ class DefaultLayout extends StatelessWidget {
     this.removeAppBar = false,
     this.resizeToAvoidBottomInset = false,
     required this.backAction,
+    this.bottomSheet,
     super.key,
   });
 
@@ -42,6 +44,7 @@ class DefaultLayout extends StatelessWidget {
       appBar: removeAppBar ? null : renderAppBar(context),
       body: child,
       bottomNavigationBar: bottomNavigationBar,
+      bottomSheet: bottomSheet,
     );
   }
 

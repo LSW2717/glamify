@@ -23,6 +23,8 @@ class ChatRoomResponse {
 
   final String? name;
 
+  final String image;
+
   @JsonKey(name: 'last_message')
   final String lastMessage;
 
@@ -36,6 +38,7 @@ class ChatRoomResponse {
     required this.updateDate,
     required this.randomYN,
     this.name,
+    required this.image,
     required this.lastMessage,
     required this.messageCount,
   });

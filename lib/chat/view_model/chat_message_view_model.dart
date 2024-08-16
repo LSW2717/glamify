@@ -100,14 +100,6 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
           });
         }
 
-        // //각 메세지마다 랜덤넘버 부여
-        // for (int i = 0; i < messageList.length; i++) {
-        //   Random random = Random();
-        //   messageList[i] = messageList[i].copyWith(
-        //     id: '${messageList[i].id}-${random.nextInt(1000)}',
-        //   );
-        // }
-
         //메세지가 없거나 30개 이하면 마지막페이지
         if (messageList.length < 30 || messageList.isEmpty) {
           isLast = true;
@@ -199,10 +191,6 @@ class ChatMessageViewModel extends _$ChatMessageViewModel {
         state = [imageMessage, ...state];
       }
     }
-  }
-
-  void setRoomId(int id) {
-    chatRoomId = id;
   }
 
   void listener() async {

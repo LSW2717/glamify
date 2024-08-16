@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -15,9 +16,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/const/typography.dart';
+import '../../common/global_variable/global_variable.dart';
 import '../../common/layout/default_layout.dart';
 import '../component/chat_bottom_bar.dart';
 import '../model/chat_room_response_model.dart';
@@ -95,7 +98,6 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView>
       final messages =
           ref.watch(chatMessageViewModelProvider(widget.chatRoomId));
       final chatData = chatState.infoResponse;
-
       final ChatRoomUserResponse emptyUser = ChatRoomUserResponse(
         userId: -1,
         nickname: '알수 없음',
@@ -103,7 +105,7 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView>
         messageReadCount: 0,
         updateDate: DateTime.fromMillisecondsSinceEpoch(0),
       );
-
+      String? previousAuthorId;
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
@@ -121,6 +123,10 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView>
           ],
           title: chatData.chatRoomInfo.name,
           child: Chat(
+            imageGalleryOptions: ImageGalleryOptions(
+              maxScale: 300.w,
+              minScale: 300.w,
+            ),
             isLeftStatus: true,
             messages: messages,
             scrollPhysics: const AlwaysScrollableScrollPhysics(),
@@ -133,8 +139,6 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView>
                     .sendMessage(text.text);
               }
             },
-            showUserAvatars: true,
-            showUserNames: true,
             onEndReached: () async {
               _handleEndReached();
             },
@@ -147,48 +151,210 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView>
                 '',
               ),
             ),
-            nameBuilder: (user) {
-              if (chatData.chatRoomUsers.isEmpty) {
-                return const Text(
-                  '알수 없음',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                );
+            bubbleBuilder: (
+              Widget child, {
+              required types.Message message,
+              required bool nextMessageInGroup,
+            }) {
+              int messageIndex =
+                  messages.indexWhere((msg) => msg.id == message.id);
+              try {
+                if (message is types.ImageMessage) {
+                  final imageUrl = message.uri;
+                  final int totalUsers = chatData.chatRoomUsers.length;
+                  final int readMembersCount =
+                      (message.metadata?['readMember'] as List?)?.length ??
+                          totalUsers - 1;
+                  final int unreadMembersCount = totalUsers - readMembersCount;
+                  unreadMembersCount == totalUsers ? unreadMembersCount - 1 : unreadMembersCount;
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 1),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (GlobalVariable.naviagatorState.currentContext !=
+                            null) {
+                          GlobalVariable.naviagatorState.currentContext!
+                              .push('/fullScreenGallery', extra: imageUrl);
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment:
+                        message.author.id == userState.user.userId.toString()
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if(message.author.id == userState.user.userId.toString())
+                            unreadMembersCount <= 0
+                                ? const Text('')
+                                : Row(
+                              children: [
+                                Text('$unreadMembersCount', style: bodyText1.copyWith(height: 2)),
+                                SizedBox(width: 3.w),
+                              ],
+                            ),
+                          if(message.author.id != userState.user.userId.toString())
+                            SizedBox(width: 45.w),
+                          Container(
+                            width: 255.w,
+                            height: 300.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: gray50,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                width: 260.w,
+                                height: 300.w,
+                                placeholder: (context, url) =>
+                                    Image.memory(kTransparentImage),
+                                errorWidget: (context, url, error) => Container(
+                                  color: gray100,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.warning,
+                                      size: 80.w,
+                                    ),
+                                  ),
+                                ),
+                                fadeInDuration: const Duration(milliseconds: 100),
+                                fit: BoxFit.fitHeight,
+                              ),
+                            ),
+                          ),
+                          if(message.author.id != userState.user.userId.toString())
+                            unreadMembersCount <= 0
+                                ? const Text('')
+                                : Row(
+                              children: [
+                                SizedBox(width: 3.w),
+                                Text('$unreadMembersCount', style: bodyText1.copyWith(height: 2)),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                } else if (message is types.TextMessage) {
+                  final foundUser = chatData.chatRoomUsers.firstWhere(
+                    (u) => u.userId == int.parse(message.author.id),
+                    orElse: () => emptyUser,
+                  );
+                  final int totalUsers = chatData.chatRoomUsers.length;
+                  final int readMembersCount =
+                      (message.metadata?['readMember'] as List?)?.length ??
+                          totalUsers - 1;
+                  final int unreadMembersCount = totalUsers - readMembersCount;
+                  final userImageUrl = chatData.chatRoomUsers.firstWhere((user) => message.author.id == user.userId.toString()).image;
+                  unreadMembersCount == totalUsers ? unreadMembersCount - 1 : unreadMembersCount;
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 1.0),
+                    child: Row(
+                      mainAxisAlignment:
+                          message.author.id == userState.user.userId.toString()
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if(message.author.id == userState.user.userId.toString())
+                        unreadMembersCount <= 0
+                            ? const Text('')
+                            : Row(
+                              children: [
+                                Text('$unreadMembersCount', style: bodyText1.copyWith(height: 2)),
+                                SizedBox(width: 3.w),
+                              ],
+                            ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if(userState.user.userId.toString() !=
+                                message.author.id)
+                            userState.user.userId.toString() !=
+                                message.author.id &&
+                                messages[messageIndex + 1].author.id ==
+                                    userState.user.userId.toString() ?
+                            Column(
+                              children: [
+                                SizedBox(height: 5.w),
+                                Container(
+                                  width: 35.w,
+                                  height: 35.w,
+                                  margin: EdgeInsets.only(right: 10.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: userImageUrl,
+                                      width: 35.w,
+                                      height: 35.w,
+                                      placeholder: (context, url) =>
+                                          Image.memory(kTransparentImage),
+                                      errorWidget: (context, url, error) => Container(
+                                        color: base3,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.person,
+                                            size: 25.w,
+                                          ),
+                                        ),
+                                      ),
+                                      fadeInDuration: const Duration(milliseconds: 100),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ) : SizedBox(width: 45.w,),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: 259.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (userState.user.userId.toString() !=
+                                      message.author.id &&
+                                      messages[messageIndex + 1].author.id ==
+                                          userState.user.userId.toString())
+                                    Text(foundUser.nickname, style: headerText5),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 1.w),
+                                    padding: EdgeInsets.symmetric(vertical: 1.w),
+                                    decoration: BoxDecoration(
+                                      color: message.author.id == userState.user.userId.toString() ? main1 : base3,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: child,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        if(message.author.id != userState.user.userId.toString())
+                          unreadMembersCount <= 0
+                              ? const Text('')
+                              : Row(
+                                children: [
+                                  SizedBox(width: 3.w),
+                                  Text('$unreadMembersCount', style: bodyText1.copyWith(height: 2)),
+                                ],
+                              ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return child;
+                }
+              } catch (e) {
+                print(e.toString());
+              } finally {
+                previousAuthorId = message.author.id;
               }
-              final foundUser = chatData.chatRoomUsers.firstWhere(
-                (u) => u.userId == int.parse(user.id),
-                orElse: () => emptyUser,
-              );
-              final userName =
-                  foundUser.nickname.isNotEmpty ? foundUser.nickname : '알수 없음';
-              return Text(
-                userName,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              );
-            },
-            avatarBuilder: (user) {
-              if (chatData.chatRoomUsers.isEmpty) {
-                return Container(
-                  margin: EdgeInsets.only(right: 5.w),
-                  child: const CircleAvatar(
-                    backgroundImage: null,
-                    radius: 17,
-                  ),
-                );
-              }
-              final foundUser = chatData.chatRoomUsers.firstWhere(
-                (u) => u.userId == int.parse(user.id),
-                orElse: () => emptyUser,
-              );
-              final userImage =
-                  foundUser.image.isNotEmpty ? foundUser.nickname : '';
-              return Container(
-                margin: EdgeInsets.only(right: 5.w),
-                child: CircleAvatar(
-                  backgroundImage:
-                      userImage.isEmpty ? null : NetworkImage(userImage),
-                  radius: 17,
-                ),
-              );
+              return child;
             },
             dateLocale: 'ko_KR',
             timeFormat: DateFormat('a h시 m분', 'ko_KR'),
@@ -198,10 +364,10 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView>
                 ImagePicker picker = ImagePicker();
                 final XFile? image =
                     await picker.pickImage(source: ImageSource.gallery);
-                if(image != null){
+                if (image != null) {
                   ref
                       .read(chatMessageViewModelProvider(widget.chatRoomId)
-                      .notifier)
+                          .notifier)
                       .sendImageMessage(image);
                 }
               },
@@ -214,22 +380,12 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView>
                 }
               },
             ),
-            customStatusBuilder: (message, {required BuildContext context}) {
-              final int totalUsers = chatData.chatRoomUsers.length;
-              final int readMembersCount =
-                  (message.metadata?['readMember'] as List?)?.length ??
-                      totalUsers - 1;
-              final int unreadMembersCount = totalUsers - readMembersCount;
-              return unreadMembersCount <= 0
-                  ? const Text('')
-                  : Text('$unreadMembersCount', style: bodyText1);
-            },
             theme: DefaultChatTheme(
               messageBorderRadius: 10,
               messageInsetsHorizontal: 10.w,
               messageInsetsVertical: 6.w,
               primaryColor: main1,
-              receivedMessageBodyTextStyle: headerText5,
+              receivedMessageBodyTextStyle: headerText4,
               dateDividerTextStyle: bodyText1.copyWith(color: base5),
               bubbleMargin:
                   EdgeInsets.symmetric(vertical: 1.w, horizontal: 14.w),

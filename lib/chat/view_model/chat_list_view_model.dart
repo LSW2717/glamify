@@ -69,6 +69,7 @@ class ChatListViewModel extends StateNotifier<ChatListState> {
             registerDate: chatRoom.registerDate,
             updateDate: DateTime.now(),
             randomYN: chatRoom.randomYN,
+            image: chatRoom.image,
           );
         }
         return chatRoom;

@@ -29,7 +29,7 @@ class UserViewModel extends _$UserViewModel {
   @override
   UserState? build() {
     getMe();
-    return LoadingUserState();
+    return InitUserState();
   }
 
   Future<void> login() async {
@@ -104,7 +104,6 @@ class UserViewModel extends _$UserViewModel {
   Future<void> updateNickname(String nickname) async {
     final request = UpdateNicknameRequest(nickname: nickname);
     await userRepository.updateNickname(request);
-    getMe();
   }
 
   Future<void> unsubscribe() async {
