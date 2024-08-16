@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:glamify/chat/model/report_request_model.dart';
 import 'package:glamify/mypage/model/inquiry_request_model.dart';
 import 'package:glamify/mypage/model/skip_and_limit_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,35 +6,35 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../model/inquiry_response_model.dart';
 import '../repository/report_repository.dart';
 
-part 'report_view_model.g.dart';
+part 'inquiry_view_model.g.dart';
 
 
 @riverpod
-class ReportViewModel extends _$ReportViewModel {
+class InquiryViewModel extends _$InquiryViewModel {
 
   @protected
   late ReportRepository repository;
 
   @override
-  ReportListState build() {
+  InquiryListState build() {
 
     repository = ref.watch(reportRepositoryProvider);
-    getAllReport();
-    return const LoadingReportListState();
+    getAllInquiries();
+    return const LoadingInquiryListState();
   }
 
-  Future<void> getAllReport() async{
-    state = const LoadingReportListState();
+  Future<void> getAllInquiries() async{
+    state = const LoadingInquiryListState();
     try {
       final SkipAndLimit request = SkipAndLimit(skip: 0, limit: 100);
       final response = await repository.getInquiries(request);
       print(response.data);
       if(response.data != null){
-        state = LoadedReportListState(response.data!);
+        state = LoadedInquiryListState(response.data!);
       }
     } catch (e) {
       print(e.toString());
-      state = ErrorReportListState(e.toString());
+      state = ErrorInquiryListState(e.toString());
     }
   }
 
@@ -53,22 +52,22 @@ class ReportViewModel extends _$ReportViewModel {
 
 
 
-abstract class ReportListState {
-  const ReportListState();
+abstract class InquiryListState {
+  const InquiryListState();
 }
 
-class LoadingReportListState extends ReportListState {
-  const LoadingReportListState();
+class LoadingInquiryListState extends InquiryListState {
+  const LoadingInquiryListState();
 }
 
-class LoadedReportListState extends ReportListState {
+class LoadedInquiryListState extends InquiryListState {
   final InquiryResponse response;
 
-  const LoadedReportListState(this.response);
+  const LoadedInquiryListState(this.response);
 }
 
-class ErrorReportListState extends ReportListState {
+class ErrorInquiryListState extends InquiryListState {
   final String errorMessage;
 
-  const ErrorReportListState(this.errorMessage);
+  const ErrorInquiryListState(this.errorMessage);
 }

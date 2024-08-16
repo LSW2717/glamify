@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glamify/common/layout/default_layout.dart';
 import 'package:glamify/mypage/component/report_container.dart';
-import 'package:glamify/mypage/view_model/report_view_model.dart';
+import 'package:glamify/mypage/view_model/inquiry_view_model.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../common/const/colors.dart';
@@ -12,7 +12,7 @@ class ReportListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reportState = ref.watch(reportViewModelProvider);
+    final reportState = ref.watch(inquiryViewModelProvider);
     return DefaultLayout(
       backAction: () => context.pop(),
       needBackButton: true,
@@ -26,19 +26,19 @@ class ReportListView extends ConsumerWidget {
         ),
       ],
       child: switch (reportState) {
-        LoadingReportListState _ => const Center(
+        LoadingInquiryListState _ => const Center(
             child: CircularProgressIndicator(
               color: main1,
             ),
           ),
-        LoadedReportListState _ => ListView.builder(
+        LoadedInquiryListState _ => ListView.builder(
             itemCount: reportState.response.total,
             itemBuilder: (context, index) {
               final report = reportState.response;
               return ReportContainer(report: report.inquiries[index]);
             },
           ),
-        ErrorReportListState _ => Center(child: Text(reportState.errorMessage)),
+        ErrorInquiryListState _ => Center(child: Text(reportState.errorMessage)),
         _ => const Center(
           child: Text('Unknown state'),
         ),

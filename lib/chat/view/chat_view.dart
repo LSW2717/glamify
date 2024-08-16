@@ -41,44 +41,41 @@ class ChatView extends ConsumerWidget {
     if (chatListState is LoadedChatListState) {
       final chatList = chatListState.response.chatRoomList;
       final chatReadCount = chatListState.response.readCountList;
-      return DefaultTabController(
-            length: 2,
-            child: CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: [
-                  SliverFillRemaining(
-                    child: chatList.isEmpty
-                        ? const ChatEmptyView() : Column(
-                      children: [
-                        SizedBox(height: 10.w),
-                        ...chatList
-                            .asMap()
-                            .map((index, data) {
-                          int unreadCount = 0;
-                          if (index < chatReadCount.length) {
-                            unreadCount = data.messageCount - chatReadCount[index].messageReadCount;
-                          }
-                          return MapEntry(
-                            index,
-                            ChatItem(
-                              imageUrl: data.image,
-                              name: data.name ?? '알수없음',
-                              lastMessage: data.lastMessage,
-                              onTap: () {
-                                context.push('/chatDetail',
-                                    extra: data.chatRoomId);
-                              },
-                              count: unreadCount,
-                            ),
-                          );
-                        })
-                            .values,
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-          );
+      return CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              child: chatList.isEmpty
+                  ? const ChatEmptyView() : Column(
+                                  children: [
+                  SizedBox(height: 10.w),
+                  ...chatList
+                      .asMap()
+                      .map((index, data) {
+                    int unreadCount = 0;
+                    if (index < chatReadCount.length) {
+                      unreadCount = data.messageCount - chatReadCount[index].messageReadCount;
+                    }
+                    return MapEntry(
+                      index,
+                      ChatItem(
+                        imageUrl: data.image,
+                        name: data.name ?? '알수없음',
+                        lastMessage: data.lastMessage,
+                        onTap: () {
+                          context.push('/chatDetail',
+                              extra: data.chatRoomId);
+                        },
+                        count: unreadCount,
+                      ),
+                    );
+                  })
+                      .values,
+                                  ],
+                                ),
+            ),
+          ],
+        );
     } else {
       return const Center(
         child: CircularProgressIndicator(

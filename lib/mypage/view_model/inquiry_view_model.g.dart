@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'report_view_model.dart';
+part of 'inquiry_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$reportViewModelHash() => r'94207d32b5ec8c1343a270dbd252408120ac0e27';
+String _$inquiryViewModelHash() => r'ac225fc838ce77cb1931336a67576dccddc76539';
 
-/// See also [ReportViewModel].
-@ProviderFor(ReportViewModel)
-final reportViewModelProvider =
-    AutoDisposeNotifierProvider<ReportViewModel, ReportListState>.internal(
-  ReportViewModel.new,
-  name: r'reportViewModelProvider',
+/// See also [InquiryViewModel].
+@ProviderFor(InquiryViewModel)
+final inquiryViewModelProvider =
+    AutoDisposeNotifierProvider<InquiryViewModel, InquiryListState>.internal(
+  InquiryViewModel.new,
+  name: r'inquiryViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$reportViewModelHash,
+      : _$inquiryViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ReportViewModel = AutoDisposeNotifier<ReportListState>;
+typedef _$InquiryViewModel = AutoDisposeNotifier<InquiryListState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:glamify/mypage/view_model/report_view_model.dart';
+import 'package:glamify/mypage/view_model/inquiry_view_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,13 +13,36 @@ import '../../common/layout/default_layout.dart';
 import '../component/contact_text_form_field.dart';
 import '../model/inquiry_request_model.dart';
 
-class SendReportView extends ConsumerWidget {
+class SendReportView extends ConsumerStatefulWidget {
   const SendReportView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    String title = '';
-    String description = '';
+  ConsumerState<SendReportView> createState() => _SendReportViewState();
+}
+
+class _SendReportViewState extends ConsumerState<SendReportView> {
+
+  late TextEditingController title;
+  late TextEditingController description;
+
+  @override
+  void initState() {
+    title = TextEditingController();
+    description = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    title.dispose();
+    description.dispose();
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
     return DefaultLayout(
       title: '문의하기작성',
       resizeToAvoidBottomInset: true,
@@ -42,8 +65,9 @@ class SendReportView extends ConsumerWidget {
                   children: [
                     ContactTextFormField(
                       onChanged: (value) {
-                        title = value;
+                        title.text = value;
                       },
+                      controller: title,
                       maxLine: 1,
                       hintText: '제목',
                       height: 52,
@@ -52,8 +76,9 @@ class SendReportView extends ConsumerWidget {
                     ContactTextFormField(
                       maxLine: 30,
                       onChanged: (value) {
-                        description = value;
+                        description.text= value;
                       },
+                      controller: description,
                       hintText: '문의할 내용을 적어주세요.',
                       height: 300,
                     ),
@@ -76,17 +101,14 @@ class SendReportView extends ConsumerWidget {
                           false;
                       if (confirm) {
                         final InquiryRequest request = InquiryRequest(
-                            title: title, description: description);
+                            title: title.text, description: description.text);
                         await ref
-                            .read(reportViewModelProvider.notifier)
+                            .read(inquiryViewModelProvider.notifier)
                             .sendReport(request)
                             .then((_) => {
-                                  ref.read(reportViewModelProvider.notifier)
-                                      .getAllReport()
-                                      .then((_) => {
-                                            context.pop(),
-                                          }),
-                                });
+                                  ref.read(inquiryViewModelProvider.notifier)
+                                      .getAllInquiries()})
+                            .then((_)=>{context.pop()});
                       }
                     },
                     style: ButtonStyle(

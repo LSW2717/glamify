@@ -324,7 +324,7 @@ class _ChatDetailViewState extends ConsumerState<ChatDetailView>
                                     margin: EdgeInsets.symmetric(vertical: 1.w),
                                     padding: EdgeInsets.symmetric(vertical: 1.w),
                                     decoration: BoxDecoration(
-                                      color: message.author.id == userState.user.userId.toString() ? main1 : base3,
+                                      color: message.author.id == userState.user.userId.toString() ? main1 : base2,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: child,

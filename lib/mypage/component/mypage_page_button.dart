@@ -18,24 +18,36 @@ class MyPageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 70.w,
-        padding: EdgeInsets.symmetric(horizontal: 35.w),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: headerText4,
+      child: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 60.w,
+            padding: EdgeInsets.symmetric(horizontal: 25.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: headerText4,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: gray700,
+                  size: 15.w,
+                ),
+              ],
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: gray700,
-              size: 18.w,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: const Divider(
+              thickness: 1.0,
+              height: 0,
+              color: gray50,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../common/component/alert_message.dart';
 import '../../common/const/colors.dart';
@@ -138,23 +140,25 @@ class _UpdateNickNameViewState extends ConsumerState<UpdateNickNameView> {
                                       size: 150.w,
                                     )
                                   : ClipOval(
-                                      child: Image.network(
-                                        imageUrl == null
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageUrl == null
                                             ? widget.user.image
                                             : imageUrl!,
                                         width: 200.w,
                                         height: 200.w,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (BuildContext context,
-                                            Object error,
-                                            StackTrace? stackTrace) {
-                                          return Center(
+                                        placeholder: (context, url) =>
+                                            Image.memory(kTransparentImage),
+                                        errorWidget: (context, url, error) => Container(
+                                          color: base3,
+                                          child: Center(
                                             child: Icon(
                                               Icons.person,
                                               size: 150.w,
                                             ),
-                                          );
-                                        },
+                                          ),
+                                        ),
+                                        fadeInDuration: const Duration(milliseconds: 100),
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                             ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import 'package:glamify/mypage/view/my_page_login_view.dart';
 import 'package:glamify/user/model/user_model.dart';
 import 'package:glamify/user/view_model/user_view_model.dart';
 import 'package:go_router/go_router.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../common/const/colors.dart';
 
@@ -29,11 +31,11 @@ class MyPageView extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  SizedBox(width: 10.w),
+                  SizedBox(width: 5.w),
                   userState.user.image.isEmpty
                       ? Container(
-                    width: 60.w,
-                    height: 60.w,
+                    width: 70.w,
+                    height: 70.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: base3,
@@ -46,32 +48,30 @@ class MyPageView extends ConsumerWidget {
                     ),
                   )
                       : Container(
-                    width: 60.w,
-                    height: 60.w,
+                    width: 70.w,
+                    height: 70.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        userState.user.image,
+                      child: CachedNetworkImage(
+                        imageUrl: userState.user.image,
+                        width: 70.w,
+                        height: 70.w,
+                        placeholder: (context, url) =>
+                            Image.memory(kTransparentImage),
+                        errorWidget: (context, url, error) => Container(
+                          color: base3,
+                          child: Center(
+                            child: Icon(
+                              Icons.person,
+                              size: 40.w,
+                            ),
+                          ),
+                        ),
+                        fadeInDuration: const Duration(milliseconds: 100),
                         fit: BoxFit.cover,
-                        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                          return Container(
-                            width: 60.w,
-                            height: 60.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: base3,
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 40.w,
-                              ),
-                            ),
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -101,6 +101,10 @@ class MyPageView extends ConsumerWidget {
           onTap: () {
             context.go('/report');
           },
+        ),
+        MyPageButton(
+          title: '공지사항',
+          onTap: () {},
         ),
         MyPageButton(
           title: '제보하기',

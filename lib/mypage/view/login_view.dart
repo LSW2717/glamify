@@ -9,16 +9,35 @@ import '../../common/const/colors.dart';
 import '../../common/const/typography.dart';
 import '../../user/view_model/user_view_model.dart';
 
-class LoginView extends ConsumerWidget {
+class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    String refreshToken = '';
+  ConsumerState<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends ConsumerState<LoginView> {
+  late TextEditingController refreshToken;
+
+  @override
+  void initState() {
+    refreshToken = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    refreshToken.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       child: DefaultLayout(
         needBackButton: false,
+        resizeToAvoidBottomInset: true,
         title: '',
         backAction: () {},
         child: Padding(
@@ -75,8 +94,9 @@ class LoginView extends ConsumerWidget {
               TextFormField(
                 maxLines: 1,
                 onChanged: (value) {
-                  refreshToken = value;
+                  refreshToken.text = value;
                 },
+                controller: refreshToken,
                 textAlign: TextAlign.start,
                 decoration: InputDecoration(
                   hintText: '토큰을 넣어주세요.',
@@ -91,10 +111,10 @@ class LoginView extends ConsumerWidget {
                 ),
                 style: bodyText2,
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               ElevatedButton(
                 onPressed: () async {
-                  await ref.read(userViewModelProvider.notifier).tokenLogin(refreshToken);
+                  await ref.read(userViewModelProvider.notifier).tokenLogin(refreshToken.text);
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.resolveWith<Color>(

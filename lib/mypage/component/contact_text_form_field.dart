@@ -45,6 +45,12 @@ class ContactTextFormField extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
+        validator: (value){
+          if(value == null || value.isEmpty){
+            return '내용을 입력해주세요';
+          }
+          return null;
+        },
         style: headerText5,
       ),
     );

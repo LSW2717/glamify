@@ -22,40 +22,42 @@ class ChatBottomBar extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: 200.w),
       child: IntrinsicHeight(
-        child: Container(
-          width: 390.w,
-          color: Colors.white,
-          padding: EdgeInsets.only(
-              top: 10.w, left: 21.w, right: 7.w, bottom: 30.w),
-          child: Row(
-            children: [
-              Expanded(
-                child: ChatTextFormField(
-                  controller: controller,
-                  onSubmitted: (text) {
-                    sendPressed(text);
+        child: SafeArea(
+          child: Container(
+            width: 390.w,
+            color: Colors.white,
+            padding: EdgeInsets.only(
+                top: 10.w, left: 21.w, right: 7.w, bottom: 10.w),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ChatTextFormField(
+                    controller: controller,
+                    onSubmitted: (text) {
+                      sendPressed(text);
+                      controller.clear();
+                    },
+                  ),
+                ),
+                IconButton(
+                  onPressed: sendImage,
+                  icon: const Icon(
+                    Icons.image,
+                    color: Colors.black,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    sendPressed(controller.text);
                     controller.clear();
                   },
+                  icon: const Icon(
+                    CupertinoIcons.heart_fill,
+                    color: Colors.pinkAccent,
+                  ),
                 ),
-              ),
-              IconButton(
-                onPressed: sendImage,
-                icon: const Icon(
-                  Icons.image,
-                  color: Colors.black,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  sendPressed(controller.text);
-                  controller.clear();
-                },
-                icon: const Icon(
-                  CupertinoIcons.heart_fill,
-                  color: Colors.pinkAccent,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
